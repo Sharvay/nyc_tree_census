@@ -6,11 +6,11 @@ execute:
   echo: true
 
 book:
-  title: "YOUR PROJECT TITLE"
+  title: "NYC Tree Census"
   author:
-    - AUTHOR1 (UNI1)
-    - AUTHOR2 (UNI2)
-  repo-url: https://github.com/YOUR_GITHUB_ACCOUNT/REPO_NAME
+    - Sahil Sanjay Chavan (sc5592)
+    - Sharvay Shashikant Chavan (sc5593)
+  repo-url: https://github.com/Sharvay/nyc_tree_census
   date: today
   page-footer:
     right: |
