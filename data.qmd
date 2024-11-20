@@ -2,52 +2,61 @@
 
 ## Description
 
-The "2015 Street Tree Census - Tree Data" dataset is a comprehensive collection of information on New York City's street trees, compiled by the NYC Department of Parks & Recreation in collaboration with volunteers and partner organizations between May 2015 and October 2016. This dataset includes detailed attributes for each of the 666,134 recorded trees, such as species (both common and scientific names), trunk diameter at breast height (DBH), health status, geographic coordinates, and surrounding infrastructure conditions. 
+  The "2015 Street Tree Census - Tree Data" dataset was compiled by the New York City Department of Parks & Recreation in collaboration with volunteers and partner organizations between May 2015 and October 2016. This comprehensive dataset encompasses detailed information on 666,134 street trees across New York City's five boroughs.
 
-The data is presented in a tabular format, with each row representing an individual tree and columns detailing its attributes. Given that the census was a one-time event, the dataset is static and not subject to updates. Potential issues include inconsistencies in data entry due to the large number of volunteers involved and the inherent challenges of accurately assessing tree health. We plan to import the data using R's read.csv() function, ensuring proper handling of data types and missing values.
+### Data Collection and Contributors:
 
-This dataset is well-suited for exploratory data analysis (EDA) due to its comprehensive nature and the variety of attributes it encompasses. The inclusion of both categorical and numerical variables allows for diverse analytical approaches. The spatial information provided enables geospatial analyses, facilitating the examination of tree distribution patterns across different neighborhoods and boroughs. Additionally, the dataset's size and richness support robust statistical analyses and data visualizations, which can uncover trends and insights pertinent to urban forestry management.
+  The dataset was collected through a large-scale citizen science initiative, marking the third decadal street tree census in New York City's history. Volunteers, organized by NYC Parks & Recreation and partner organizations, conducted field surveys to document various attributes of street trees. This collaborative effort aimed to create an up-to-date inventory of the city's urban forest.
 
-### Key Attributes:
+- *Source*: [2015 Street Tree Census - Tree Data](https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data)  
 
-**Tree Identification:**
 
-- Tree ID: A unique identifier assigned to each tree.
+
+- *Data Format and Structure*:
+
+  The data is presented in a tabular format, with each row representing an individual tree and columns detailing its attributes. Key attributes include:
+
+- *Tree Identification*:
+
+  - Tree ID: A unique identifier assigned to each tree.
 Block ID: Identifier for the block where the tree is located.
 Species Information:
 
-- Species Latin Name: Scientific name of the tree species.
+   - Species Latin Name: Scientific name of the tree species.
 Species Common Name: Common name of the tree species.
 Physical Characteristics:
 
-- Diameter at Breast Height (DBH): Trunk diameter measured at 4.5 feet above ground.
+  - Diameter at Breast Height (DBH): Trunk diameter measured at 4.5 feet above ground.
 Tree Health: Condition of the tree, categorized as Good, Fair, Poor, or Dead.
 Root Guards: Presence of root protection measures.
 Trunk, Branch, and Sidewalk Conditions: Assessment of physical conditions affecting the tree and its surroundings.
 Location Details:
 
-- Latitude and Longitude: Geographic coordinates of the tree's location.
+  - Latitude and Longitude: Geographic coordinates of the tree's location.
 Address: Nearest street address to the tree.
 Borough and Community Board: Administrative divisions where the tree is situated.
 Stewardship and Infrastructure:
 
-- Stewardship Level: Indicates the level of care provided by individuals or groups.
+  - Stewardship Level: Indicates the level of care provided by individuals or groups.
 Sidewalk Width and Material: Details about the sidewalk adjacent to the tree.
 Curb Location: Position of the tree relative to the curb.
-The dataset is presented in CSV format, with each row representing an individual tree and columns detailing its attributes. Given that the census was a one-time event, the dataset is static and not subject to updates. Potential issues include inconsistencies in data entry due to the large number of volunteers involved and the inherent challenges of accurately assessing tree health. We plan to import the data using R's read.csv() function, ensuring proper handling of data types and missing values.
+Frequency of Updates:
 
-### Planned Utilization:
+  The 2015 Street Tree Census was a one-time data collection effort conducted over approximately 18 months. As such, the dataset is static and not subject to regular updates. It represents a snapshot of New York City's street trees during the period of May 2015 to October 2016.
 
-We intend to leverage this dataset to explore several key areas:
+- *Dimensions and Scope*:
 
-- Species Distribution: Analyzing the prevalence and diversity of tree species across various boroughs and neighborhoods.
+  The dataset comprises 666,134 records, each corresponding to an individual street tree. It includes a wide range of attributes, both categorical and numerical, allowing for diverse analytical approaches. The spatial information provided enables geospatial analyses, facilitating the examination of tree distribution patterns across different neighborhoods and boroughs. Additionally, the dataset's size and richness support robust statistical analyses and data visualizations, which can uncover trends and insights pertinent to urban forestry management.
 
-- Health Assessment: Evaluating the overall health of the urban forest and identifying areas with higher concentrations of unhealthy or dead trees.
+- *Potential Issues and Considerations*:
 
-- Spatial Analysis: Mapping tree locations to assess coverage and identify potential gaps in the urban canopy.
+  While the dataset is comprehensive, potential issues include inconsistencies in data entry due to the large number of volunteers involved and the inherent challenges of accurately assessing tree health. We plan to import the data using R's read.csv() function, ensuring proper handling of data types and missing values.
 
-- Infrastructure Interaction: Investigating the relationship between trees and surrounding infrastructure, such as sidewalks and curbs, to understand potential conflicts or synergies.
+- *Frequency of Updates*:  
+  The dataset is static, representing a one-time snapshot of the NYC street trees as they existed during the census period (2015–2016). It does not receive updates and serves as a historical record.
 
-By conducting these analyses, we aim to provide insights that can inform urban planning and environmental sustainability efforts within New York City.
+- *Import Methodology*:  
+  The dataset will be imported using R’s read.csv() function to handle its large size efficiently.
+
 
 ## Missing value analysis
