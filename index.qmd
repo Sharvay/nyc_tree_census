@@ -3,7 +3,7 @@ Trees form the backbone of urban ecosystems, offering a multitude of benefits th
 
 Recognizing these benefits, conducting a tree census becomes essential for effective urban forestry management. A comprehensive inventory of street trees allows city planners and environmentalists to assess the current state of the urban forest, identify areas lacking green cover, and develop strategies for planting and maintenance. It also aids in monitoring tree health, detecting diseases or pest infestations early, and ensuring the longevity of the urban canopy. Moreover, data from tree censuses can inform policies aimed at enhancing biodiversity, improving air quality, and adapting to climate change. 
 
-In 2015, NYC conducted its third Street Tree Census, engaging volunteers in the city's largest citizen science effort to document over 666,000 trees.This extensive dataset serves as a critical resource for understanding the composition and condition of New York City's urban forest. This dataset provides a unique opportunity to explore several key areas:
+In 2015, NYC conducted its third Street Tree Census, engaging volunteers in the city's largest citizen science effort to document over 666,000 trees. This extensive dataset serves as a critical resource for understanding the composition and condition of New York City's urban forest. This dataset provides a unique opportunity to explore several key areas:
 
 - **Tree Health and Environmental Impact**:  
   Investigate factors affecting tree health and their relationship to size and location.  
@@ -12,7 +12,7 @@ In 2015, NYC conducted its third Street Tree Census, engaging volunteers in the 
   Explore the impact of tree placement on sidewalk damage and other infrastructure issues.  
 
 - **Community Engagement**:  
-  Assess how maintenance activities influence tree health and urban forestry.  
+  Assess how Stewardship activities influence tree health and urban forestry.  
 
 - **Urban Planning and Spatial Trends**:  
   Analyze tree distribution and species diversity across boroughs and neighborhoods.  
