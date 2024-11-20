@@ -2,60 +2,30 @@
 
 ## Description
 
-  The "2015 Street Tree Census - Tree Data" dataset was compiled by the New York City Department of Parks & Recreation in collaboration with volunteers and partner organizations between May 2015 and October 2016. This comprehensive dataset encompasses detailed information on 666,134 street trees across New York City's five boroughs.
+The "2015 Street Tree Census - Tree Data" dataset is a comprehensive collection of information on New York City's street trees, compiled by the NYC Department of Parks & Recreation in collaboration with volunteers and partner organizations between May 2015 and October 2016. Representing the largest citizen science initiative in the city’s history, the dataset includes detailed attributes for 666,134 recorded trees across New York City's five boroughs.
 
-### Data Collection and Contributors:
+- **Source** : [2015 Street Tree Census - Tree Data](https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data)  
 
-  The dataset was collected through a large-scale citizen science initiative, marking the third decadal street tree census in New York City's history. Volunteers, organized by NYC Parks & Recreation and partner organizations, conducted field surveys to document various attributes of street trees. This collaborative effort aimed to create an up-to-date inventory of the city's urban forest.
-
-- *Source*: [2015 Street Tree Census - Tree Data](https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh/about_data)  
-
-
-
-- *Data Format and Structure*:
-
+- **Data Collection** :  
+The data was collected by trained volunteers and NYC Parks staff, using standardized protocols to ensure consistency. Each tree’s attributes, including species, diameter, health status, and geographic location, were recorded during the census. The data collection process also involved visual inspections and field surveys to gather accurate information on tree conditions and their interactions with surrounding infrastructure.
+  
+- **Data Format and Structure**:  
   The data is presented in a tabular format, with each row representing an individual tree and columns detailing its attributes. Key attributes include:
 
-- *Tree Identification*:
+  - *Tree Identification* : Unique Tree ID and Block ID for each tree.  
+  - *Species Information* : Scientific (Latin) and common names of the tree species.  
+  - *Physical Characteristics* : Diameter at Breast Height (DBH), health status (Good, Fair, Poor, Dead), and presence of root guards. Assessment of trunk, branch.
+  - *Location Details* : Geographic coordinates (latitude and longitude), nearest address, borough, and community board.  
+  - *Stewardship and Infrastructure* : Level of care provided, sidewalk details, and curb location.  
 
-  - Tree ID: A unique identifier assigned to each tree.
-Block ID: Identifier for the block where the tree is located.
-Species Information:
+- **Dimensions and Scope**:  
+  The dataset comprises 666,134 records and 45 columns, each corresponding to an individual street tree. It offers a rich combination of categorical and numerical variables suitable for diverse analytical approaches. Its spatial information enables geospatial analyses, such as examining tree distribution patterns across neighborhoods and boroughs. This richness makes the dataset particularly well-suited for exploratory data analysis, allowing us to uncover trends and insights relevant to urban forestry management.
 
-   - Species Latin Name: Scientific name of the tree species.
-Species Common Name: Common name of the tree species.
-Physical Characteristics:
-
-  - Diameter at Breast Height (DBH): Trunk diameter measured at 4.5 feet above ground.
-Tree Health: Condition of the tree, categorized as Good, Fair, Poor, or Dead.
-Root Guards: Presence of root protection measures.
-Trunk, Branch, and Sidewalk Conditions: Assessment of physical conditions affecting the tree and its surroundings.
-Location Details:
-
-  - Latitude and Longitude: Geographic coordinates of the tree's location.
-Address: Nearest street address to the tree.
-Borough and Community Board: Administrative divisions where the tree is situated.
-Stewardship and Infrastructure:
-
-  - Stewardship Level: Indicates the level of care provided by individuals or groups.
-Sidewalk Width and Material: Details about the sidewalk adjacent to the tree.
-Curb Location: Position of the tree relative to the curb.
-Frequency of Updates:
-
-  The 2015 Street Tree Census was a one-time data collection effort conducted over approximately 18 months. As such, the dataset is static and not subject to regular updates. It represents a snapshot of New York City's street trees during the period of May 2015 to October 2016.
-
-- *Dimensions and Scope*:
-
-  The dataset comprises 666,134 records, each corresponding to an individual street tree. It includes a wide range of attributes, both categorical and numerical, allowing for diverse analytical approaches. The spatial information provided enables geospatial analyses, facilitating the examination of tree distribution patterns across different neighborhoods and boroughs. Additionally, the dataset's size and richness support robust statistical analyses and data visualizations, which can uncover trends and insights pertinent to urban forestry management.
-
-- *Potential Issues and Considerations*:
-
-  While the dataset is comprehensive, potential issues include inconsistencies in data entry due to the large number of volunteers involved and the inherent challenges of accurately assessing tree health. We plan to import the data using R's read.csv() function, ensuring proper handling of data types and missing values.
-
-- *Frequency of Updates*:  
+  
+- **Frequency of Update** :  
   The dataset is static, representing a one-time snapshot of the NYC street trees as they existed during the census period (2015–2016). It does not receive updates and serves as a historical record.
 
-- *Import Methodology*:  
+- **Import Methodology** :  
   The dataset will be imported using R’s read.csv() function to handle its large size efficiently.
 
 
