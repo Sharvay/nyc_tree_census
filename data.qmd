@@ -25,15 +25,10 @@ The data was collected by trained volunteers and NYC Parks staff, using standard
 - **Frequency of Update** :  
   The dataset is static, representing a one-time snapshot of the NYC street trees as they existed during the census period (2015–2016). It does not receive updates and serves as a historical record.
 
-- **Import Methodology** :  
+- **Importing the Data** :  
   The dataset will be imported using R’s read.csv() function to handle its large size efficiently.
 
-
-## Missing value analysis
-
-### **R Code**
-
-```{r}
+```{r, message= FALSE, warning=FALSE}
 # Library Imports
 library(tidyverse)  
 library(readr)      
@@ -41,21 +36,23 @@ library(ggplot2)
 library(dplyr)
 ```
 
-```{r}
+```{r, message= FALSE, warning=FALSE}
+# Importing the data
 tree_data <- read_csv("../2015_Street_Tree_Census_-_Tree_Data_20241120.csv")
-tree_data |>
-  summarise(across(everything(), ~ sum(is.na(.) | . == "" | . == "None")))
 ```
-```{r}
+
+## Missing value analysis
+
+```{r, fig.width=10, fig.height=8}
+# storing the data with missing values in a variable
 tree_data_with_na <- tree_data |>
   mutate(across(everything(), ~ ifelse(is.na(.) | . == "" | . == " " | . == "None", NA, .)))
-```
-```{r fig.width=10, fig.height=8}
+
 # Step 1: Count NA values in each column
 na_counts <- tree_data_with_na %>%
-  summarise(across(everything(), ~ sum(is.na(.)))) %>%
-  t() %>%
-  as.data.frame()
+             summarise(across(everything(), ~ sum(is.na(.)))) %>%
+             t() %>%
+             as.data.frame()
 
 # Add column names for clarity
 colnames(na_counts) <- c("NA_Count")
@@ -78,20 +75,37 @@ ggplot(na_counts_filtered, aes(x = reorder(Column, -Percentage), y = Percentage)
             vjust = -0.5, size = 4, color = "black") +
   theme_minimal() +
   labs(
-    title = "Percentage of Missing Values in Columns with NA Values",
+    title = "Percentage of Missing Values Across Columns Containing NA Values",
     x = "Columns",
     y = "Percentage of Missing Values"
   ) +
   scale_y_continuous(labels = scales::percent_format(scale = 1)) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.x = element_text(angle =35, hjust = 1, size = 10),
     axis.text.y = element_text(size = 10),
     axis.title.x = element_text(size = 12, face = "bold"),
     axis.title.y = element_text(size = 12, face = "bold")
   )
 ```
-```{r}
+---
+
+**High Missing Value Columns**  
+
+- **`guards`**: With 88.3% missing values, this column has the highest rate of missingness. The data on tree guards might not have been consistently collected, possibly because it was optional or difficult to assess during the survey.
+- **`steward`**: At 76% missing values, this column reflects limited data availability on tree stewardship. This may be due to a lack of reporting or complexity in identifying individuals or groups responsible for tree care.
+- **`problems`**: This column has 67% missing values. It indicates incomplete data on issues affecting the trees, which could result from challenges in identifying or documenting tree-related problems.
+
+**Moderate and Low Missing Value Columns**  
+
+- **`spc_common`, `spc_latin`, `health`, `sidewalk`**: These columns have around 4.6% missing values. These fields likely had better data collection protocols but still show gaps, potentially due to oversight or difficulty in identifying specific attributes (e.g., species or tree health conditions).
+- **`bbl`, `bin`, `census tract`, `council district`**: These columns exhibit very low missing values (less than 2%). These administrative or geographic fields were likely easier to document consistently, but small gaps might have occurred due to technical issues or incomplete records.
+
+**Columns with No Missing Values**  
+
+- Many columns in the dataset have no missing values, which indicates robust data collection for these fields. These complete columns will form a reliable foundation for further analysis.
+---
+```{r, fig.width=10, fig.height=8}
 # Step 1: Convert all columns to character type (except row identifier)
 tree_data_char <- tree_data_with_na %>%
   mutate(across(everything(), as.character))
@@ -103,7 +117,7 @@ tree_data_char <- tree_data_char %>%
 # Step 3: Reshape data into long format, excluding the `row` column
 na_heatmap_data <- tree_data_char %>%
   pivot_longer(cols = -row, names_to = "Column", values_to = "Value") %>%
-  mutate(Missing = is.na(Value) | Value == "" | Value == "None")  # Detect missing values
+  mutate(Missing = is.na(Value) | Value == "" | Value == "None")  
 
 # Step 4: Plot the heatmap
 ggplot(na_heatmap_data, aes(x = Column, y = row, fill = Missing)) +
@@ -111,18 +125,24 @@ ggplot(na_heatmap_data, aes(x = Column, y = row, fill = Missing)) +
   scale_fill_manual(values = c("TRUE" = "red", "FALSE" = "white")) +
   theme_minimal() +
   labs(
-    title = "Heatmap of Missing Values",
+    title = "Heatmap of Missing Values (All Columns)",
     x = "Columns",
     y = "Rows",
     fill = "Missing"
   ) +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    axis.text.y = element_blank(),
-    plot.title = element_text(hjust = 0.5)
-  )
-```
+    axis.text.x = element_text(angle = 90, hjust = 1),
+    axis.text.y = element_text(size = 7),  
+    plot.title = element_text(hjust = 0.5))
 
+```
+---
+
+- Most columns have no missing values, represented by consistent white blocks across rows.
+- Significant missingness is observed in columns such as **`guards`**, **`steward`**, and **`problems`** (frequent red blocks).
+- Administrative columns like **`bbl`**, **`bin`**, and **`census tract`** have very few missing values, shown by minimal red blocks.
+
+---
 ```{r}
 # Step 1: Convert all columns to character type (except row identifier)
 tree_data_char <- tree_data_with_na %>%
@@ -156,35 +176,25 @@ ggplot(na_heatmap_data, aes(x = Column, y = row, fill = Missing)) +
     fill = "Missing"
   ) +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    axis.text.y = element_blank(),
-    plot.title = element_text(hjust = 0.5)
+    axis.text.x = element_text(angle = 90, hjust = 1),  
+    axis.text.y = element_text(size = 7),  
+    plot.title = element_text(hjust = 0.5)  
   )
 ```
-### **High Missing Value Columns**
-- **`guards`**: With 88.3% missing values, this column has the highest rate of missingness. The data on tree guards might not have been consistently collected, possibly because it was optional or difficult to assess during the survey.
-- **`steward`**: At 76% missing values, this column reflects limited data availability on tree stewardship. This may be due to a lack of reporting or complexity in identifying individuals or groups responsible for tree care.
-- **`problems`**: This column has 67% missing values. It indicates incomplete data on issues affecting the trees, which could result from challenges in identifying or documenting tree-related problems.
-
 ---
 
-### **Low Missing Value Columns**
-- **Columns like `spc_common`, `spc_latin`, `health`, and `sidewalk`**: These columns have around 4.6% missing values. These fields likely had better data collection protocols but still show gaps, potentially due to oversight or difficulty in identifying specific attributes (e.g., species or tree health conditions).
-- **`bbl`, `bin`, `census tract`, and `council district`**: These columns exhibit very low missing values (less than 2%). These administrative or geographic fields were likely easier to document consistently, but small gaps might have occurred due to technical issues or incomplete records.
-
----
-
-### **Columns with No Missing Values**
-- Many columns in the dataset have no missing values, which indicates robust data collection for these fields. These complete columns will form a reliable foundation for further analysis.
-
----
+- The graph focuses on columns with missing values, providing a concise view of the fields.
+- **`guards`** and **`steward`** exhibit the highest missingness, with red blocks dominating most rows.
+- Moderate missingness is seen in columns like **`health`**, **`problems`**, and **`sidewalk`**, with scattered red blocks.
+- Columns with lower missingness, such as **`bbl`** and **`bin`**, have fewer red blocks compared to others.
 
 ### **Nature of Missing Values**
 
-The dataset contains missing values in various non-uniform forms. Some values are represented as standard `NA` in R, while others are explicitly recorded as `"None"`. Additionally, there are instances where missing values are represented as blank strings (`""`) or blank spaces (`" "`). This lack of uniformity highlights inconsistencies in data recording, likely stemming from variations in surveyor practices or data entry protocols.
+- The dataset contains missing values in various non-uniform forms. Some values are represented as standard `NA` in R, while others are explicitly recorded as `"None"`. Additionally, there are instances where missing values are represented as blank strings (`""`) or blank spaces (`" "`). 
+- This inconsistency in representing missing values highlights variations in data collection practices, requiring careful preprocessing to standardize these entries for effective analysis.
 
+### **Implications**
 
-
-
-
-
+- Columns with high missing values (`guards`, `steward`, `problems`) may require imputation or exclusion, depending on their importance in the analysis.
+- The majority of columns with minimal or no missing data indicate that a significant portion of the dataset remains reliable for analysis.
+- The missing data pattern highlights a mix of inconsistencies in data collection efforts, emphasizing the need for preprocessing and careful handling of incomplete information.
