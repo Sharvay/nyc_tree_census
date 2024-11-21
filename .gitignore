@@ -3,4 +3,6 @@
 .RData
 .Ruserdata
 
+temp.R
+temp.Rmd
 /.quarto/

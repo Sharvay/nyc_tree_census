@@ -60,3 +60,161 @@ Frequency of Updates:
 
 
 ## Missing value analysis
+
+### **R Code**
+
+```{r}
+# Library Imports
+library(tidyverse)  
+library(readr)      
+library(ggplot2)    
+library(dplyr)
+```
+
+```{r}
+tree_data <- read_csv("../2015_Street_Tree_Census_-_Tree_Data_20241120.csv")
+tree_data |>
+  summarise(across(everything(), ~ sum(is.na(.) | . == "" | . == "None")))
+```
+```{r}
+tree_data_with_na <- tree_data |>
+  mutate(across(everything(), ~ ifelse(is.na(.) | . == "" | . == " " | . == "None", NA, .)))
+```
+```{r fig.width=10, fig.height=8}
+# Step 1: Count NA values in each column
+na_counts <- tree_data_with_na %>%
+  summarise(across(everything(), ~ sum(is.na(.)))) %>%
+  t() %>%
+  as.data.frame()
+
+# Add column names for clarity
+colnames(na_counts) <- c("NA_Count")
+na_counts$Column <- rownames(na_counts)
+rownames(na_counts) <- NULL
+
+# Step 2: Calculate total rows and convert counts to percentages
+total_rows <- nrow(tree_data)
+na_counts <- na_counts %>%
+  mutate(Percentage = (NA_Count / total_rows) * 100)
+
+# Step 3: Filter out columns with no NA values
+na_counts_filtered <- na_counts %>%
+  filter(NA_Count > 0)
+
+# Step 4: Plot NA percentages for remaining columns
+ggplot(na_counts_filtered, aes(x = reorder(Column, -Percentage), y = Percentage)) +
+  geom_bar(stat = "identity", fill = "steelblue", color = "black", width = 0.7) +
+  geom_text(aes(label = paste0(round(Percentage, 1), "%")), 
+            vjust = -0.5, size = 4, color = "black") +
+  theme_minimal() +
+  labs(
+    title = "Percentage of Missing Values in Columns with NA Values",
+    x = "Columns",
+    y = "Percentage of Missing Values"
+  ) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.y = element_text(size = 10),
+    axis.title.x = element_text(size = 12, face = "bold"),
+    axis.title.y = element_text(size = 12, face = "bold")
+  )
+```
+```{r}
+# Step 1: Convert all columns to character type (except row identifier)
+tree_data_char <- tree_data_with_na %>%
+  mutate(across(everything(), as.character))
+
+# Step 2: Add a row identifier
+tree_data_char <- tree_data_char %>%
+  mutate(row = row_number())
+
+# Step 3: Reshape data into long format, excluding the `row` column
+na_heatmap_data <- tree_data_char %>%
+  pivot_longer(cols = -row, names_to = "Column", values_to = "Value") %>%
+  mutate(Missing = is.na(Value) | Value == "" | Value == "None")  # Detect missing values
+
+# Step 4: Plot the heatmap
+ggplot(na_heatmap_data, aes(x = Column, y = row, fill = Missing)) +
+  geom_tile() +
+  scale_fill_manual(values = c("TRUE" = "red", "FALSE" = "white")) +
+  theme_minimal() +
+  labs(
+    title = "Heatmap of Missing Values",
+    x = "Columns",
+    y = "Rows",
+    fill = "Missing"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.y = element_blank(),
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+
+```{r}
+# Step 1: Convert all columns to character type (except row identifier)
+tree_data_char <- tree_data_with_na %>%
+  mutate(across(everything(), as.character))
+
+# Step 2: Identify columns with NA values
+columns_with_na <- tree_data_char %>%
+  summarise(across(everything(), ~ sum(is.na(.) | . == "" | . == "None"))) %>%
+  select(where(~ . > 0)) %>%
+  names()
+
+# Step 3: Filter to include only columns with NA values and add row identifier
+tree_data_filtered <- tree_data_char %>%
+  select(all_of(columns_with_na)) %>%
+  mutate(row = row_number())
+
+# Step 4: Reshape data into long format, excluding the `row` column
+na_heatmap_data <- tree_data_filtered %>%
+  pivot_longer(cols = -row, names_to = "Column", values_to = "Value") %>%
+  mutate(Missing = is.na(Value) | Value == "" | Value == "None")  # Detect missing values
+
+# Step 5: Plot the heatmap
+ggplot(na_heatmap_data, aes(x = Column, y = row, fill = Missing)) +
+  geom_tile() +
+  scale_fill_manual(values = c("TRUE" = "red", "FALSE" = "white")) +
+  theme_minimal() +
+  labs(
+    title = "Heatmap of Missing Values (Columns with NA Values Only)",
+    x = "Columns",
+    y = "Rows",
+    fill = "Missing"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.y = element_blank(),
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+### **High Missing Value Columns**
+- **`guards`**: With 88.3% missing values, this column has the highest rate of missingness. The data on tree guards might not have been consistently collected, possibly because it was optional or difficult to assess during the survey.
+- **`steward`**: At 76% missing values, this column reflects limited data availability on tree stewardship. This may be due to a lack of reporting or complexity in identifying individuals or groups responsible for tree care.
+- **`problems`**: This column has 67% missing values. It indicates incomplete data on issues affecting the trees, which could result from challenges in identifying or documenting tree-related problems.
+
+---
+
+### **Low Missing Value Columns**
+- **Columns like `spc_common`, `spc_latin`, `health`, and `sidewalk`**: These columns have around 4.6% missing values. These fields likely had better data collection protocols but still show gaps, potentially due to oversight or difficulty in identifying specific attributes (e.g., species or tree health conditions).
+- **`bbl`, `bin`, `census tract`, and `council district`**: These columns exhibit very low missing values (less than 2%). These administrative or geographic fields were likely easier to document consistently, but small gaps might have occurred due to technical issues or incomplete records.
+
+---
+
+### **Columns with No Missing Values**
+- Many columns in the dataset have no missing values, which indicates robust data collection for these fields. These complete columns will form a reliable foundation for further analysis.
+
+---
+
+### **Nature of Missing Values**
+
+The dataset contains missing values in various non-uniform forms. Some values are represented as standard `NA` in R, while others are explicitly recorded as `"None"`. Additionally, there are instances where missing values are represented as blank strings (`""`) or blank spaces (`" "`). This lack of uniformity highlights inconsistencies in data recording, likely stemming from variations in surveyor practices or data entry protocols.
+
+
+
+
+
+
