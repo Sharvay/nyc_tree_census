@@ -234,7 +234,7 @@ The data is presented in a tabular format, with each row representing an individ
 <li><em>Stewardship and Infrastructure</em> : Level of care provided, sidewalk details, and curb location.</li>
 </ul></li>
 <li><p><strong>Dimensions and Scope</strong>:<br>
-The dataset comprises 666,134 records and 45 columns, each corresponding to an individual street tree. It offers a rich combination of categorical and numerical variables suitable for diverse analytical approaches. Its spatial information enables geospatial analyses, such as examining tree distribution patterns across neighborhoods and boroughs. This richness makes the dataset particularly well-suited for exploratory data analysis, allowing us to uncover trends and insights relevant to urban forestry management.</p></li>
+The dataset comprises 166,134 records and 45 columns, each corresponding to an individual street tree. It offers a rich combination of categorical and numerical variables suitable for diverse analytical approaches. Its spatial information enables geospatial analyses, such as examining tree distribution patterns across neighborhoods and boroughs. This richness makes the dataset particularly well-suited for exploratory data analysis, allowing us to uncover trends and insights relevant to urban forestry management.</p></li>
 <li><p><strong>Frequency of Update</strong> :<br>
 The dataset is static, representing a one-time snapshot of the NYC street trees as they existed during the census period (2015–2016). It does not receive updates and serves as a historical record.</p></li>
 <li><p><strong>Importing the Data</strong> :<br>
@@ -253,8 +253,8 @@ The dataset will be imported using R’s read.csv() function to handle its large
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importing the data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tree_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../2015_Street_Tree_Census_-_Tree_Data_20241120.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importing the data, we are using partial data due to computational limits.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tree_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../2015_Street_Tree_Census_-_Tree_Data_20241120.csv"</span>, <span class="at">n_max =</span> <span class="dv">266134</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -318,13 +318,13 @@ The dataset will be imported using R’s read.csv() function to handle its large
 <hr>
 <p><strong>High Missing Value Columns</strong></p>
 <ul>
-<li><strong><code>guards</code></strong>: With 88.3% missing values, this column has the highest rate of missingness. The data on tree guards might not have been consistently collected, possibly because it was optional or difficult to assess during the survey.</li>
-<li><strong><code>steward</code></strong>: At 76% missing values, this column reflects limited data availability on tree stewardship. This may be due to a lack of reporting or complexity in identifying individuals or groups responsible for tree care.</li>
-<li><strong><code>problems</code></strong>: This column has 67% missing values. It indicates incomplete data on issues affecting the trees, which could result from challenges in identifying or documenting tree-related problems.</li>
+<li><strong><code>guards</code></strong>: With 87.3% missing values, this column has the highest rate of missingness. The data on tree guards might not have been consistently collected, possibly because it was optional or difficult to assess during the survey.</li>
+<li><strong><code>steward</code></strong>: At 74.4% missing values, this column reflects limited data availability on tree stewardship. This may be due to a lack of reporting or complexity in identifying individuals or groups responsible for tree care.</li>
+<li><strong><code>problems</code></strong>: This column has 66.4% missing values. It indicates incomplete data on issues affecting the trees, which could result from challenges in identifying or documenting tree-related problems.</li>
 </ul>
 <p><strong>Moderate and Low Missing Value Columns</strong></p>
 <ul>
-<li><strong><code>spc_common</code>, <code>spc_latin</code>, <code>health</code>, <code>sidewalk</code></strong>: These columns have around 4.6% missing values. These fields likely had better data collection protocols but still show gaps, potentially due to oversight or difficulty in identifying specific attributes (e.g., species or tree health conditions).</li>
+<li><strong><code>spc_common</code>, <code>spc_latin</code>, <code>health</code>, <code>sidewalk</code></strong>: These columns have around 50% missing values. These fields likely had better data collection protocols but still show gaps, potentially due to oversight or difficulty in identifying specific attributes (e.g., species or tree health conditions).</li>
 <li><strong><code>bbl</code>, <code>bin</code>, <code>census tract</code>, <code>council district</code></strong>: These columns exhibit very low missing values (less than 2%). These administrative or geographic fields were likely easier to document consistently, but small gaps might have occurred due to technical issues or incomplete records.</li>
 </ul>
 <p><strong>Columns with No Missing Values</strong></p>
@@ -444,7 +444,7 @@ The dataset will be imported using R’s read.csv() function to handle its large
 <section id="implications" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="implications"><span class="header-section-number">2.2.2</span> <strong>Implications</strong></h3>
 <ul>
-<li>Columns with high missing values (<code>guards</code>, <code>steward</code>, <code>problems</code>) may require imputation or exclusion, depending on their importance in the analysis.</li>
+<li>Columns with high missing values (<strong><code>guards</code></strong>, <strong><code>steward</code></strong>, <strong><code>problems</code></strong>) may require imputation or exclusion, depending on their importance in the analysis.</li>
 <li>The majority of columns with minimal or no missing data indicate that a significant portion of the dataset remains reliable for analysis.</li>
 <li>The missing data pattern highlights a mix of inconsistencies in data collection efforts, emphasizing the need for preprocessing and careful handling of incomplete information.</li>
 </ul>
