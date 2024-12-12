@@ -1,1 +1,72 @@
 # Results
+
+```{r, message= FALSE, warning=FALSE}
+# Importing library
+library(tidyverse)  
+library(readr)      
+library(ggplot2)    
+library(dplyr)
+library(gridExtra)
+
+tree_data <- read_csv("../2015_Street_Tree_Census_-_Tree_Data_20241120.csv", n_max = 266134)
+tree_data <- na.omit(tree_data)
+```
+## The Urban Canopy: NYC’s Tree Diversity
+Lets first explore the overall composition of NYC's tree population.
+
+```{r, fig.width=15, fig.height=10}
+
+# Count the number of trees for each species and select the top 15
+top_species <- tree_data %>%
+  count(spc_common, sort = TRUE) %>%
+  slice_max(order_by = n, n = 15)  
+
+# Count the number of trees for each species and select the least 15
+least_species <- tree_data %>%
+  count(spc_common, sort = TRUE) %>%
+  slice_min(order_by = n, n = 15) 
+
+# Create the bar plot for Top 15 Most Common Tree Species
+top_species_plot <- ggplot(top_species, aes(x = reorder(spc_common, n), y = n)) +
+  geom_bar(stat = "identity", fill = "#4C72B0") + 
+  coord_flip() + 
+  labs(
+    title = "Top 15 Most Common Tree Species in NYC", 
+    x = "Tree Species", 
+    y = "Number of Trees"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),  
+    axis.text.y = element_text(face = "bold", size = 12),  
+    axis.text.x = element_text(face = "bold", size = 12),  
+    axis.title = element_text(face = "bold", size = 14))
+
+# Create the bar plot for 15 Least Seen Tree Species
+least_species_plot <- ggplot(least_species, aes(x = reorder(spc_common, n), y = n)) +
+  geom_bar(stat = "identity", fill = "#D55E00") +  
+  coord_flip() + 
+  labs(
+    title = "15 Least Common Tree Species in NYC", 
+    x = "Tree Species", 
+    y = "Number of Trees"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),  
+    axis.text.y = element_text(face = "bold", size = 12),  
+    axis.text.x = element_text(face = "bold", size = 12),  
+    axis.title = element_text(face = "bold", size = 14)  
+  )
+
+# Arrange the plots side-by-side using gridExtra
+grid.arrange(
+  top_species_plot, 
+  least_species_plot, 
+  ncol = 2  
+)
+
+```
+The bar plot highlights that the **London planetree** is the most common species in NYC, with over 30,000 trees, thanks to its adaptability to urban conditions such as tolerance to pollution, drought, and varying soil pH. While it contributes to NYC’s fall aesthetics with its dense canopies and abundant leaf shedding, its foliage lacks the vibrant colors of species like **red maple** and **sweetgum**, which define the iconic autumn palette. Other species like **honeylocust**, **Callery pear**, and **pin oak** also play significant roles in NYC’s tree population. However, the heavy reliance on the London planetree raises concerns about monoculture vulnerabilities, as pests or diseases could disproportionately affect it. Insights from this analysis suggest that diversifying species further could enhance ecological resilience and reduce maintenance challenges, such as managing the significant cleanup required for London planetree debris.
+
+The second bar plot shows that NYC’s **least common species**, such as **red pine**, **red horse chestnut**, and **Douglas-fir**, have fewer than 30 trees. Their rarity reflects challenges in urban adaptation, including specific environmental needs and sensitivity to pollution. Trees like **Osage-orange** and **Himalayan cedar** highlight underutilized biodiversity, offering potential for conservation efforts. Rare species may require tailored strategies for survival in urban environments, such as improved soil preparation, reduced competition, or protection from pests. Incorporating a wider variety of species, including these rarer types, could reduce risks associated with monoculture and promote a more balanced and resilient urban forest.
