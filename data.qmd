@@ -195,6 +195,6 @@ ggplot(na_heatmap_data, aes(x = Column, y = row, fill = Missing)) +
 
 ### **Implications**
 
-- Columns with high missing values (`guards`, `steward`, `problems`) may require imputation or exclusion, depending on their importance in the analysis.
+- Columns with high missing values (**`guards`**, **`steward`**, **`problems`**) may require imputation or exclusion, depending on their importance in the analysis.
 - The majority of columns with minimal or no missing data indicate that a significant portion of the dataset remains reliable for analysis.
 - The missing data pattern highlights a mix of inconsistencies in data collection efforts, emphasizing the need for preprocessing and careful handling of incomplete information.
