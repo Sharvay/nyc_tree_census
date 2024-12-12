@@ -38,7 +38,7 @@ library(dplyr)
 
 ```{r, message= FALSE, warning=FALSE}
 # Importing the data
-tree_data <- read_csv("../2015_Street_Tree_Census_-_Tree_Data_20241120.csv")
+tree_data <- read_csv("../2015_Street_Tree_Census_-_Tree_Data_20241120.csv", n_max = 166134)
 ```
 
 ## Missing value analysis
