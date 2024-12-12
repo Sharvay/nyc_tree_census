@@ -9,5 +9,56 @@
 <div id="plot">
 </div>
 
+<p style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    This interactive graph visualizes the <i>health status of trees</i> across New York City boroughs using a color-coded map. Each tree is represented as a point, with health categorized into 
+    <span style="color: green; font-weight: bold;">Good (Green)</span>, 
+    <span style="color: goldenrod; font-weight: bold;">Fair (Yellow)</span>, 
+    <span style="color: red; font-weight: bold;">Poor (Red)</span>, and 
+    <span style="color: gray; font-weight: bold;">Data Not Available (Gray)</span>. 
+    Users can explore tree health in specific boroughs using a dropdown menu, view details by hovering over points, and reset to see all boroughs. The graph uses smooth transitions and a clear legend to ensure ease of exploration, providing a deeper understanding of tree health distributions across the city.
+</p>
+
+<p style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <b>1. <i>Key Focus:</i></b><br>
+    - Visualize <i>tree health across NYC boroughs</i>.<br>
+    - Enable users to filter, explore, and gain insights interactively.
+</p>
+
+<p style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <b>2. <i>Interactions:</i></b><br>
+    - <b>Dropdown Menu:</b> Select a borough to filter tree health data dynamically.<br>
+    - <b>Hover Tooltips:</b> Display tree health counts and percentages for clusters.<br>
+    - <b>Reset Button:</b> Return to the city-wide view.
+</p>
+
+<p style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <b>3. <i>Design Features:</i></b><br>
+    - <b>Color-Coding:</b><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;- <span style="color: green; font-weight: bold;">Good Health: Green</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;- <span style="color: goldenrod; font-weight: bold;">Fair Health: Yellow</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;- <span style="color: red; font-weight: bold;">Poor Health: Red</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;- <span style="color: gray; font-weight: bold;">Data Not Available: Gray</span><br>
+    - <b>Legend:</b> Clear and color-coded, placed prominently.<br>
+    - <b>Smooth Transitions:</b> Borough filtering and zoom with animations.
+</p>
+
+<p style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <b>4. <i>Instructions:</i></b><br>
+    <i>“Use the dropdown to filter by borough. Hover for details. Reset to see all boroughs.”</i>
+</p>
+<p style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <b>5 .Observations Based on the Visualization:</b><br>
+    - The majority of trees are in <span style="color: green; font-weight: bold;">Good Health</span>, reflecting satisfactory tree maintenance and care across most parts of NYC. This indicates that urban tree health is generally well-managed.<br>
+    - A smaller but noticeable number of trees are in <span style="color: goldenrod; font-weight: bold;">Fair Health</span>, which suggests some areas may require additional monitoring or care to prevent further decline.<br>
+    - Trees in <span style="color: red; font-weight: bold;">Poor Health</span> are sparsely distributed, with no significant clusters visible in any one region. These areas may require targeted intervention to improve tree health.<br>
+    - Some regions are marked with <span style="color: gray; font-weight: bold;">Data Not Available</span>, indicating gaps in the dataset. This could point to areas where surveys were not conducted or where data collection was incomplete.<br>
+    - The <b>interactive features</b> such as the dropdown menu allow users to filter data by borough, making it easier to explore specific regions and compare tree health across different parts of the city.<br>
+    - Using the reset button, users can return to a city-wide view, enabling a broader perspective of tree health distribution.<br>
+    - Borough-specific insights can be valuable for identifying areas with higher proportions of <span style="color: green; font-weight: bold;">Good Health</span> trees versus areas with more <span style="color: red; font-weight: bold;">Poor Health</span> trees, helping prioritize urban planning efforts.<br>
+    - The interactive zoom functionality facilitates detailed exploration of specific clusters, offering precise insights into local tree conditions.<br>
+    - Regions with higher proportions of <span style="color: red; font-weight: bold;">Poor Health</span> trees could indicate areas needing immediate attention, while the dominance of <span style="color: green; font-weight: bold;">Good Health</span> trees suggests successful maintenance programs across most regions.
+</p>
+
+
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="scripts/myscript.js"></script>

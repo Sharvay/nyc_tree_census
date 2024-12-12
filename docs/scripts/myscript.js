@@ -57,12 +57,12 @@ d3.select("#plot").append("button")
   .style("padding", "5px")
   .style("font-size", "14px");
 
-d3.select("#plot").append("button")
-  .attr("id", "download-map")
-  .text("Download Map")
-  .style("margin", "10px")
-  .style("padding", "5px")
-  .style("font-size", "14px");
+//d3.select("#plot").append("button")
+//  .attr("id", "download-map")
+//  .text("Download Map")
+//  .style("margin", "10px")
+//  .style("padding", "5px")
+//  .style("font-size", "14px");
 
 // Load NYC Borough Boundaries
 console.log("Loading NYC borough boundaries...");
@@ -231,25 +231,6 @@ d3.select("#reset-zoom").on("click", function() {
     .call(zoom.transform, d3.zoomIdentity); // Reset zoom to initial state
 });
 
-d3.select("#download-map").on("click", function() {
-  const svgElement = document.querySelector("svg");
-  const serializer = new XMLSerializer();
-  const svgString = serializer.serializeToString(svgElement);
 
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-  canvas.width = width;
-  canvas.height = height;
-
-  const img = new Image();
-  img.onload = function () {
-    ctx.drawImage(img, 0, 0);
-    const a = document.createElement("a");
-    a.download = "tree_map.png";
-    a.href = canvas.toDataURL("image/png");
-    a.click();
-  };
-  img.src = "data:image/svg+xml;base64," + btoa(svgString);
-});
 
 console.log("Zoom, pan, and download functionality ready.");
