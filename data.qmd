@@ -19,7 +19,7 @@ The data was collected by trained volunteers and NYC Parks staff, using standard
   - *Stewardship and Infrastructure* : Level of care provided, sidewalk details, and curb location.  
 
 - **Dimensions and Scope**:  
-  The dataset comprises 666,134 records and 45 columns, each corresponding to an individual street tree. It offers a rich combination of categorical and numerical variables suitable for diverse analytical approaches. Its spatial information enables geospatial analyses, such as examining tree distribution patterns across neighborhoods and boroughs. This richness makes the dataset particularly well-suited for exploratory data analysis, allowing us to uncover trends and insights relevant to urban forestry management.
+  The dataset comprises 166,134 records and 45 columns, each corresponding to an individual street tree. It offers a rich combination of categorical and numerical variables suitable for diverse analytical approaches. Its spatial information enables geospatial analyses, such as examining tree distribution patterns across neighborhoods and boroughs. This richness makes the dataset particularly well-suited for exploratory data analysis, allowing us to uncover trends and insights relevant to urban forestry management.
 
   
 - **Frequency of Update** :  
@@ -98,7 +98,7 @@ ggplot(na_counts_filtered, aes(x = reorder(Column, -Percentage), y = Percentage)
 
 **Moderate and Low Missing Value Columns**  
 
-- **`spc_common`, `spc_latin`, `health`, `sidewalk`**: These columns have around 4.6% missing values. These fields likely had better data collection protocols but still show gaps, potentially due to oversight or difficulty in identifying specific attributes (e.g., species or tree health conditions).
+- **`spc_common`, `spc_latin`, `health`, `sidewalk`**: These columns have around 4.60% missing values. These fields likely had better data collection protocols but still show gaps, potentially due to oversight or difficulty in identifying specific attributes (e.g., species or tree health conditions).
 - **`bbl`, `bin`, `census tract`, `council district`**: These columns exhibit very low missing values (less than 2%). These administrative or geographic fields were likely easier to document consistently, but small gaps might have occurred due to technical issues or incomplete records.
 
 **Columns with No Missing Values**  
