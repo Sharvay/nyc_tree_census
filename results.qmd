@@ -7,6 +7,9 @@ library(readr)
 library(ggplot2)    
 library(dplyr)
 library(gridExtra)
+library(ggalluvial)
+library(scales)
+library(vegan)
 
 tree_data <- read_csv("../2015_Street_Tree_Census_-_Tree_Data_20241120.csv", n_max = 266134)
 tree_data <- na.omit(tree_data)
@@ -67,9 +70,10 @@ grid.arrange(
 )
 
 ```
-The bar plot highlights that the **London planetree** is the most common species in NYC, with over 30,000 trees, thanks to its adaptability to urban conditions such as tolerance to pollution, drought, and varying soil pH. While it contributes to NYC’s fall aesthetics with its dense canopies and abundant leaf shedding, its foliage lacks the vibrant colors of species like **red maple** and **sweetgum**, which define the iconic autumn palette. Other species like **honeylocust**, **Callery pear**, and **pin oak** also play significant roles in NYC’s tree population. However, the heavy reliance on the London planetree raises concerns about monoculture vulnerabilities, as pests or diseases could disproportionately affect it. Insights from this analysis suggest that diversifying species further could enhance ecological resilience and reduce maintenance challenges, such as managing the significant cleanup required for London planetree debris.
+The bar plot shows that the London planetree is the most common species in NYC, with over 30,000 trees, simply for its adaptability to the urban condition, such as resistance to pollution, drought, and a wide range of soil pH.  While it contributes to NYC's fall aesthetics with its dense canopies and abundant shedding, its foliage lacks the vibrant colors that species like **red maple** and **sweetgum** display, which define the iconic autumn palette. Other major contributors to NYC's population are **honeylocust**, **Callery pear**, and **pin oak**. However, the high dependence on one species, the London planetree, does raise concerns of monoculture vulnerabilities as any pest or disease affecting it would result in very uneven damage. These implications indicate that further diversification could improve ecological resilience by reducing the challenges of maintenance, given the immense cleanup required for fallen debris from the London planetree.
 
-The second bar plot shows that NYC’s **least common species**, such as **red pine**, **red horse chestnut**, and **Douglas-fir**, have fewer than 30 trees. Their rarity reflects challenges in urban adaptation, including specific environmental needs and sensitivity to pollution. Trees like **Osage-orange** and **Himalayan cedar** highlight underutilized biodiversity, offering potential for conservation efforts. Rare species may require tailored strategies for survival in urban environments, such as improved soil preparation, reduced competition, or protection from pests. Incorporating a wider variety of species, including these rarer types, could reduce risks associated with monoculture and promote a more balanced and resilient urban forest.
+The second bar plot shows that NYC's **most rare species**, including **red pine**, **red horse chestnut**, and **Douglas-fir**, have fewer than 30 trees. These are indicative of the difficult conditions needed for urban adaptation, such as very specific ecological requirements and high sensitivity to pollution. Relatively rare tree species that include **Osage-orange** and **Himalayan-cedar** illustrate underutilized biodiversities that can have promise for conservation efforts. Some of these rare species could be assisted to live in an urban environment with improved soil preparation, less competition, or protection from pests. By planting a more diverse set of species, including some of these rare ones, risks from monoculture could be reduced, creating a better balance in the makeup and health of the urban forest.
+
 
 ## Surviving the City: Daily Struggles of NYC Trees
 
@@ -110,8 +114,8 @@ ggplot(problem_data, aes(x = presence, y = count, fill = presence)) +
 
 **Branch Problems**
 
-- **Branch problems caused by lights** (`brch_light`) have the highest occurrence among branch-related issues but remain rare compared to "No" responses.
-- Problems like **branch problems caused by shoes** (`brch_shoe`) and **other branch problems** (`brch_other`) are negligible.
+- **Branch problems caused by lights** (`brch_light`) have the highest frequency of any of the branch issues but still quite rare when compared to "No".
+- Issues that included **branch problems caused by shoes** (`brch_shoe`) and **other branch problems** (`brch_other`) are negligible.
 
 **Root Problems**
 
@@ -125,6 +129,42 @@ ggplot(problem_data, aes(x = presence, y = count, fill = presence)) +
 
 The graph highlights **root problems caused by stones** as the primary concern, underscoring the need for improved urban planning around tree beds. Branch and trunk problems are negligible, indicating effective maintenance or fewer external stressors.
 
+## Branching Out: A Snapshot of Tree Diversity Across NYC Boroughs
+The bar chart illustrates the **Shannon Diversity Index** for tree species across different boroughs in New York City.
+```{r}
+# Calculate Shannon Diversity Index for Each Borough
+
+diversity_data <- tree_data %>%
+  group_by(borough, spc_common) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  group_by(borough) %>%
+  summarize(diversity_index = diversity(count))
+
+# Bar Chart
+ggplot(diversity_data, aes(x = reorder(borough, -diversity_index), y = diversity_index, fill = borough)) +
+  geom_col(color = "black", width = 0.7) +
+  scale_fill_brewer(palette = "Set3") +
+  labs(
+    title = "Tree Diversity Index by Borough",
+    x = "Borough",
+    y = "Diversity Index",
+    fill = "Borough"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
+    legend.position = "none"
+  )
+```
+The diversity index, which quantifies the variety and distribution of species, reveals some subtle but meaningful patterns:
+
+1. **Queens** emerges with the highest diversity index, indicating that this borough has the most balanced mix of tree species. This could be due to its larger green spaces or more distributed urban forestry initiatives.
+
+2. **Bronx** and **Brooklyn** follow closely, showing comparable diversity indices. These boroughs likely benefit from active reforestation programs or ecological conditions that support a variety of species.
+
+3. **Staten Island** and **Manhattan** have slightly lower diversity indices. Staten Island's lower population density might explain fewer diverse tree planting efforts. On the other hand, Manhattan's highly urbanized landscape and limited green space could restrict opportunities for introducing diverse tree species.
+
+This analysis suggests that **urban planning, tree planting policies, and available green space** play significant roles in influencing tree diversity across boroughs. While the differences are not drastic, the diversity index highlights the relative ecological richness of Queens, Bronx, and Brooklyn compared to the more urbanized Manhattan. These findings could guide future biodiversity-enhancing efforts in areas with lower diversity.
 
 ## Rooting for Good Health: Tree Conditions in NYC Neighborhoods
 The stacked diverging bar chart provides a visual summary of tree health distribution.
@@ -165,29 +205,27 @@ ggplot(tree_data_filtered, aes(x = count, y = borough, fill = health)) +
 
 **Borough Comparison**
 
-- **Queens** has the highest number of trees overall, with a significant portion in good health, but it also has a noticeable proportion of trees in **Fair health** (yellow segment).
-- **Staten Island** and **Bronx** have relatively fewer trees compared to Brooklyn and Queens, but a large proportion of their trees are in **Good health**.
+- **Queens** has the highest number of trees overall, with a significant portion in good health. It also has a noticeable proportion of trees in **Fair health** (yellow segment).
+- Staten Island and Bronx, though less in number than Brooklyn and Queens, have a high percentage of their trees in Good heal
 
 **Poor Health Distribution**
 
-   - Trees in **Poor health** (red segment) represent the smallest category across all boroughs.
-   - **Manhattan** has the highest proportion of trees in poor health relative to its total number of trees, suggesting potential urban stress factors like pollution or limited green spaces.
+- Poor health: Red segment is the least category in all boroughs.
+- **Manhattan** has the highest proportion of trees in poor health relative to its total number of trees. This suggests potential urban stress factors like pollution or limited green spaces.
 
 **Brooklyn and Staten Island**
 
-   - Brooklyn has the second-highest total number of trees, following Queens, and most are in good health.
-   - Staten Island, despite having the smallest tree count, shows a relatively balanced distribution among health categories compared to other boroughs.
+- Brooklyn has the second-highest total number of trees, following Queens. Most of the trees are in good health.
+Staten Island is the least in terms of number but shows a relatively balanced distribution in health categories in comparison with other boroughs.
 
 **Potential for Action**
 
-   - Boroughs like **Manhattan** and **Queens** may require targeted intervention to improve the health of trees classified as **Fair** or **Poor**, given their larger populations and stress factors.
-   
+- **Manhattan** and **Queens** are some boroughs that might need special treatment in enhancing the health status of their **Fair**- or **Poor**-rated trees since larger populations translate to larger stress factors.
+
 ## Trunk Titans: Small vs. Mighty Trees
 The Cleveland dot plot shows the average tree diameter (DBH) for various tree species, highlighting differences in growth patterns and size among species in NYC.
-```{r, fig.width=17, fig.height=12}
-library(dplyr)
-library(ggplot2)
 
+```{r, fig.width=17, fig.height=12}
 # Aggregate mean diameter by species
 species_avg <- tree_data %>%
   group_by(spc_common) %>%
@@ -217,20 +255,21 @@ ggplot(species_avg, aes(x = mean_dbh, y = reorder(spc_common, mean_dbh))) +
 
 **Top Species with Largest Average Diameters**
 
-   - Species like **London planetree**, **silver maple**, and **weeping willow** stand out with the largest average tree diameters, exceeding 16 DBH (Diameter at Breast Height). These species are known for their fast growth and adaptability, often resulting in larger tree sizes.
+- Species such as **London planetree**, **silver maple**, and **weeping willow** are among those with the largest average diameters, with each having an average diameter greater than 16 DBH. These species have been characterized by fast growth and adaptation, leading to bigger tree sizes.
 
 **Species with Smallest Average Diameters**
 
-   - At the lower end of the spectrum, species such as **Ohio buckeye**, **ginkgo**, and **American linden** exhibit smaller average diameters (around 8 DBH). These species may be slower-growing or less suitable for NYC's urban conditions.
+- Species at the lower end of the spectrum, like **Ohio buckeye**, **ginkgo**, and **American linden**, are going to be closer to an 8 DBH average. These might be slower-growing species or ones less adapted to NYC conditions.
+
 
 **Insights for Urban Planning**
 
-   - Large-diameter species like the **London planetree** may require more space and resources but provide substantial canopy coverage. In contrast, smaller-diameter species may be suitable for tighter urban spaces.
+- Larger-diameter species, such as the **London planetree**, while requiring more space and other resources, give very substantial canopy coverage. In contrast, the smaller diameter species may work well in tighter spaces within the urban environment.
 
 **Species-Specific Growth Patterns**
 
-   - The differences in average diameter could reflect species-specific growth characteristics, planting preferences, or environmental adaptability in NYC.
-   
+- These differences in average diameter tells us about the growth characteristics according to the species, planting preferences, and environmental adaptability in NYC.
+
 ## Paving the Way: Proportion of Sidewalks Affected by Trees
 The pie chart illustrates the proportion of trees in NYC with adjacent sidewalk damage.
 ```{r}
@@ -266,24 +305,24 @@ ggplot(sidewalk_proportion, aes(x = "", y = prop, fill = sidewalk)) +
 
 **Majority with No Sidewalk Damage**:
 
-   - A significant proportion (71.5%) of trees are adjacent to sidewalks that are in good condition, without visible damage.
+   - A significant share (71.5%) of the trees are indeed on sidewalks that are not reported to have visible damage.
 
 **Minority with Sidewalk Damage**:
 
-   - Approximately 28.5% of trees are associated with sidewalks showing signs of damage.
+   - Around 28.5% of the trees are located on sidewalks reported to be showing signs of damage.
 
 **Urban Impact Insight**:
 
-   - This suggests that while the majority of sidewalks are resilient to tree-related damage, a substantial portion still suffers from issues, potentially due to tree roots disrupting pavement structures.
+   - Although most sidewalks are resistant to the damages related to trees, a significant number still experience problems, likely due to damage to pavement structures caused by tree roots.
 
 **Actionable Consideration**:
 
-   - Efforts could focus on mitigating damage through better tree placement or root management strategies to reduce future sidewalk damage while preserving urban greenery.
+   - one could strategize efforts at mitigating damages through improved tree planting or management techniques for roots that would minimize future sidewalk damages.
 
 ## Pathways to Tree Health: Exploring Curb Placement, Sidewalk Conditions, and Their Impact
 The alluvial plot visualizes the relationship between curb location, sidewalk damage, and tree health.
 ```{r, fig.width=15, fig.height=8}
-library(ggalluvial)
+
 # Prepare data for alluvial plot
 alluvial_data <- tree_data %>%
   group_by(curb_loc, sidewalk, health) %>%
@@ -315,8 +354,8 @@ ggplot(alluvial_data, aes(axis1 = curb_loc, axis2 = sidewalk, axis3 = health, y 
 
 **Sidewalk Damage**
 
-   - Trees **OnCurb** are more associated with **Sidewalk Damage**, likely due to root growth interfering with pavement structures.
-   - Trees **OffsetFromCurb** show a stronger association with **NoDamage**, suggesting reduced impact on sidewalks.
+   - Trees **OnCurb** are more associated with **Sidewalk Damage**. It is likely due to root growth interfering with pavement structures.
+   - Trees **OffsetFromCurb** show a stronger association with **NoDamage**. This suggests reduced impact on sidewalks.
 
 **Tree Health**
 
@@ -325,14 +364,14 @@ ggplot(alluvial_data, aes(axis1 = curb_loc, axis2 = sidewalk, axis3 = health, y 
 
 **Relationships**
 
-   - A clear flow is visible where trees **OnCurb** with **Sidewalk Damage** tend to have more **Fair** or **Poor** health. 
-   - Trees **OffsetFromCurb** and with **NoDamage** predominantly exhibit **Good** health.
+- There is a clear flow where trees **OnCurb** with **Sidewalk Damage** tend to be more **Fair** or **Poor** in health.
+- Trees **OffsetFromCurb** and with **NoDamage** mostly have **Good** health.
+
+## Uneven Growth: Tree Diameters and Sidewalk Struggles
 
 The plot highlights the interplay between tree placement, sidewalk integrity, and tree health. Proper placement (e.g., OffsetFromCurb) could mitigate sidewalk damage and promote better tree health.
 
 ```{r}
-library(ggplot2)
-
 ggplot(tree_data, aes(x = sidewalk, y = tree_dbh, fill = sidewalk)) +
   geom_violin() +
   labs(
@@ -345,14 +384,29 @@ ggplot(tree_data, aes(x = sidewalk, y = tree_dbh, fill = sidewalk)) +
   theme_minimal()
 
 ```
-### **Bubble chart**
+**Distribution of Tree Diameters**
+
+   - Trees with sidewalk damage have a slightly wider spread of diameters compared to those without damage.
+   - Most trees in both categories have diameters concentrated in the lower ranges, indicating smaller trees dominate the dataset.
+
+**Potential Correlation**
+
+   - Sidewalk damage seems slightly more prevalent for trees with larger diameters, as indicated by the broader shape of the violin for "Damage."
+
+**Tree Size and Damage**
+
+   - Larger trees might exert more pressure on surrounding sidewalks due to their extensive root systems, contributing to damage.
+
+**NoDamage Category**
+
+   - Trees in the "NoDamage" category show a similar diameter distribution, suggesting other factors besides tree size might influence sidewalk integrity.
+
+
+## Bubble chart
 
 The bubble chart offers several insights into the distribution of tree species and their health status across different boroughs in New York City.
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-
 # Calculate the Top 5 Most Common Species
 top_species <- tree_data %>%
   count(spc_common, sort = TRUE) %>%
@@ -391,8 +445,6 @@ ggplot(bubble_data, aes(x = borough, y = spc_common, size = count, color = healt
 
 ```
 
-A few key patterns emerge from this visualization:
-
 1.  **Dominance of London Planetree**:
     -   The London planetree stands out as the most commonly planted species across all boroughs, evidenced by its larger bubble sizes. This aligns with its popularity as a resilient urban tree, often chosen for its ability to thrive in diverse environmental conditions.
 2.  **Health Trends Across Species**:
@@ -405,7 +457,7 @@ A few key patterns emerge from this visualization:
 5.  **Species Diversity**:
     -   While the London planetree dominates, other species such as Callery pear and honeylocust also have significant representation. This diversity is particularly evident in boroughs like Queens, which seem to have a more balanced mix of species compared to other boroughs.
 
-
+## How Tree Diameter and Problem Types Affect Health Across Boroughs
 
 ```{r, fig.width=17, fig.height=5}
 # Prepare Data for Scatter Plot
@@ -441,15 +493,15 @@ ggplot(scatter_data, aes(x = tree_dbh, y = health, color = borough)) +
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
 ```
-### **Observation and Story: Root-Related Challenges for NYC's Trees**
 
-#### **Observation**
+
 - Trees with root-related problems (`root_grate`, `root_other`, `root_stone`) display a significant decline in health as their diameter (DBH) increases.
 - Trees larger than 16 inches (DBH) show a higher proportion of "Fair" and "Poor" health statuses compared to smaller trees.
 - This pattern is most prominent in boroughs like **Brooklyn** and **Staten Island**, which have a greater number of larger trees and infrastructure-related stressors.
 - Root-related problems, such as interference from grates, stones, and soil compaction, are particularly impactful for larger trees, likely due to their greater resource requirements and restricted growing conditions in urban environments.
 
-#### **Story**
+We can get intutiton that:
+
 - **Larger Trees Are Under Threat**:
   - Larger trees, especially those exceeding 16 inches in diameter, are critical to NYC's urban canopy. They provide a range of ecological benefits, including carbon sequestration, air purification, cooling through shade, and improved biodiversity. However, the data shows they are increasingly vulnerable to health issues, particularly root-related stress.
   - Root issues, including limited space for root expansion, interference from grates, and urban soil compaction, disrupt nutrient absorption and overall stability, contributing to a decline in health.
@@ -458,10 +510,8 @@ ggplot(scatter_data, aes(x = tree_dbh, y = health, color = borough)) +
   - These boroughs host a broader distribution of larger trees, making them key areas where root-related challenges are more prevalent. Larger trees in these boroughs are often subject to urban stressors due to aging infrastructure and limited urban planning geared toward tree preservation.
   - The prevalence of root issues in these boroughs highlights the need for borough-specific interventions, such as redesigning urban layouts and expanding tree planting zones.
 
+## Stewardship Matters: Exploring the Link Between Care Levels and Tree Health
 ```{r fig.width=9, fig.height=6}
-library(ggplot2)
-library(scales)
-
 # Custom labels for log base 2
 log2_labels <- function(x) {
   paste0("2^", log2(x))
@@ -496,7 +546,7 @@ ggplot(steward_health_data, aes(x = steward, y = count, fill = health)) +
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
-    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.x = element_text(hjust = 1),
     axis.text.y = element_text(size = 12), # Larger font size for y-axis labels
     legend.position = "top"
   )
@@ -504,8 +554,6 @@ ggplot(steward_health_data, aes(x = steward, y = count, fill = health)) +
 
 
 ```
-
-### Observation:
 
 - The **stewardship level** significantly influences the health of trees, as evidenced by the data. The graph, plotted on a **log base 2 scale**, highlights that trees without any recorded stewardship ("None") constitute the largest group. This category also exhibits the widest variability in health status, with a substantial proportion of trees in "Good" health, followed by "Fair" and "Poor" health. This could indicate that while trees without stewardship are at higher risk of deteriorating health, a significant number still maintain good health, potentially due to favorable environmental conditions or maintenance by other means.
 
@@ -515,43 +563,5 @@ ggplot(steward_health_data, aes(x = steward, y = count, fill = health)) +
 
 - Overall, the graph suggests that stewardship has a positive impact on tree health, but the lack of stewardship for a significant proportion of trees is an area of concern. This could warrant further investigation or policy recommendations to enhance stewardship participation and ensure a healthier urban forest.
 
-```{r}
-# Calculate Shannon Diversity Index for Each Borough
 
-library(vegan)
-diversity_data <- tree_data %>%
-  group_by(borough, spc_common) %>%
-  summarize(count = n(), .groups = "drop") %>%
-  group_by(borough) %>%
-  summarize(diversity_index = diversity(count))
 
-# Bar Chart
-ggplot(diversity_data, aes(x = reorder(borough, -diversity_index), y = diversity_index, fill = borough)) +
-  geom_col(color = "black", width = 0.7) +
-  scale_fill_brewer(palette = "Set3") +
-  labs(
-    title = "Tree Diversity Index by Borough",
-    x = "Borough",
-    y = "Diversity Index",
-    fill = "Borough"
-  ) +
-  theme_minimal(base_size = 14) +
-  theme(
-    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
-    legend.position = "none"
-  )
-
-```
-### Observation:
-
-The bar chart illustrates the **Shannon Diversity Index** for tree species across different boroughs in New York City. The diversity index, which quantifies the variety and distribution of species, reveals some subtle but meaningful patterns:
-
-1. **Queens** emerges with the highest diversity index, indicating that this borough has the most balanced mix of tree species. This could be due to its larger green spaces or more distributed urban forestry initiatives.
-
-2. **Bronx** and **Brooklyn** follow closely, showing comparable diversity indices. These boroughs likely benefit from active reforestation programs or ecological conditions that support a variety of species.
-
-3. **Staten Island** and **Manhattan** have slightly lower diversity indices. Staten Island's lower population density might explain fewer diverse tree planting efforts. On the other hand, Manhattan's highly urbanized landscape and limited green space could restrict opportunities for introducing diverse tree species.
-
-### Interpretation:
-
-This analysis suggests that **urban planning, tree planting policies, and available green space** play significant roles in influencing tree diversity across boroughs. While the differences are not drastic, the diversity index highlights the relative ecological richness of Queens, Bronx, and Brooklyn compared to the more urbanized Manhattan. These findings could guide future biodiversity-enhancing efforts in areas with lower diversity.
