@@ -184,6 +184,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#the-urban-canopy-nycs-tree-diversity" id="toc-the-urban-canopy-nycs-tree-diversity" class="nav-link active" data-scroll-target="#the-urban-canopy-nycs-tree-diversity"><span class="header-section-number">3.1</span> The Urban Canopy: NYC’s Tree Diversity</a></li>
+  <li><a href="#surviving-the-city-daily-struggles-of-nyc-trees" id="toc-surviving-the-city-daily-struggles-of-nyc-trees" class="nav-link" data-scroll-target="#surviving-the-city-daily-struggles-of-nyc-trees"><span class="header-section-number">3.2</span> Surviving the City: Daily Struggles of NYC Trees</a></li>
+  <li><a href="#rooting-for-good-health-tree-conditions-in-nyc-neighborhoods" id="toc-rooting-for-good-health-tree-conditions-in-nyc-neighborhoods" class="nav-link" data-scroll-target="#rooting-for-good-health-tree-conditions-in-nyc-neighborhoods"><span class="header-section-number">3.3</span> Rooting for Good Health: Tree Conditions in NYC Neighborhoods</a></li>
+  <li><a href="#trunk-titans-small-vs.-mighty-trees" id="toc-trunk-titans-small-vs.-mighty-trees" class="nav-link" data-scroll-target="#trunk-titans-small-vs.-mighty-trees"><span class="header-section-number">3.4</span> Trunk Titans: Small vs.&nbsp;Mighty Trees</a></li>
+  <li><a href="#paving-the-way-proportion-of-sidewalks-affected-by-trees" id="toc-paving-the-way-proportion-of-sidewalks-affected-by-trees" class="nav-link" data-scroll-target="#paving-the-way-proportion-of-sidewalks-affected-by-trees"><span class="header-section-number">3.5</span> Paving the Way: Proportion of Sidewalks Affected by Trees</a></li>
+  <li><a href="#pathways-to-tree-health-exploring-curb-placement-sidewalk-conditions-and-their-impact" id="toc-pathways-to-tree-health-exploring-curb-placement-sidewalk-conditions-and-their-impact" class="nav-link" data-scroll-target="#pathways-to-tree-health-exploring-curb-placement-sidewalk-conditions-and-their-impact"><span class="header-section-number">3.6</span> Pathways to Tree Health: Exploring Curb Placement, Sidewalk Conditions, and Their Impact</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Sharvay/nyc_tree_census/edit/main/results.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Sharvay/nyc_tree_census/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -289,6 +294,334 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The bar plot highlights that the <strong>London planetree</strong> is the most common species in NYC, with over 30,000 trees, thanks to its adaptability to urban conditions such as tolerance to pollution, drought, and varying soil pH. While it contributes to NYC’s fall aesthetics with its dense canopies and abundant leaf shedding, its foliage lacks the vibrant colors of species like <strong>red maple</strong> and <strong>sweetgum</strong>, which define the iconic autumn palette. Other species like <strong>honeylocust</strong>, <strong>Callery pear</strong>, and <strong>pin oak</strong> also play significant roles in NYC’s tree population. However, the heavy reliance on the London planetree raises concerns about monoculture vulnerabilities, as pests or diseases could disproportionately affect it. Insights from this analysis suggest that diversifying species further could enhance ecological resilience and reduce maintenance challenges, such as managing the significant cleanup required for London planetree debris.</p>
 <p>The second bar plot shows that NYC’s <strong>least common species</strong>, such as <strong>red pine</strong>, <strong>red horse chestnut</strong>, and <strong>Douglas-fir</strong>, have fewer than 30 trees. Their rarity reflects challenges in urban adaptation, including specific environmental needs and sensitivity to pollution. Trees like <strong>Osage-orange</strong> and <strong>Himalayan cedar</strong> highlight underutilized biodiversity, offering potential for conservation efforts. Rare species may require tailored strategies for survival in urban environments, such as improved soil preparation, reduced competition, or protection from pests. Incorporating a wider variety of species, including these rarer types, could reduce risks associated with monoculture and promote a more balanced and resilient urban forest.</p>
+</section>
+<section id="surviving-the-city-daily-struggles-of-nyc-trees" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="surviving-the-city-daily-struggles-of-nyc-trees"><span class="header-section-number">3.2</span> Surviving the City: Daily Struggles of NYC Trees</h2>
+<p>We will see the prevalence of various tree problems in NYC, categorized into trunk, branch, and root issues using the faceted bar chart.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>problem_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"trunk_wire"</span>, <span class="st">"trnk_light"</span>, <span class="st">"trnk_other"</span>, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"brch_light"</span>, <span class="st">"brch_shoe"</span>, <span class="st">"brch_other"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"root_stone"</span>, <span class="st">"root_grate"</span>, <span class="st">"root_other"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>problem_data <span class="ot">&lt;-</span> tree_data <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(problem_columns)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"problem_type"</span>, <span class="at">values_to =</span> <span class="st">"presence"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(presence)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(problem_type, presence) <span class="sc">%&gt;%</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the faceted bar chart</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(problem_data, <span class="fu">aes</span>(<span class="at">x =</span> presence, <span class="at">y =</span> count, <span class="at">fill =</span> presence)) <span class="sc">+</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Yes"</span> <span class="ot">=</span> <span class="st">"#FF6347"</span>, <span class="st">"No"</span> <span class="ot">=</span> <span class="st">"#4682B4"</span>)) <span class="sc">+</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> problem_type, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Presence of Tree Problems by Type"</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Problem Presence (Yes/No)"</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Trees"</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="results_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="1440"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Branch Problems</strong></p>
+<ul>
+<li><strong>Branch problems caused by lights</strong> (<code>brch_light</code>) have the highest occurrence among branch-related issues but remain rare compared to “No” responses.</li>
+<li>Problems like <strong>branch problems caused by shoes</strong> (<code>brch_shoe</code>) and <strong>other branch problems</strong> (<code>brch_other</code>) are negligible.</li>
+</ul>
+<p><strong>Root Problems</strong></p>
+<ul>
+<li><strong>Root problems caused by stones</strong> (<code>root_stone</code>) are the most significant among all categories, with a notable number of “Yes” responses. This highlights the impact of paved areas on root health.</li>
+<li><strong>Root problems caused by grates</strong> (<code>root_grate</code>) and <strong>other root problems</strong> (<code>root_other</code>) are nearly nonexistent.</li>
+</ul>
+<p><strong>Trunk Problems</strong></p>
+<ul>
+<li>Trunk-related issues, including <strong>problems caused by wires</strong> (<code>trunk_wire</code>) and <strong>lights</strong> (<code>trnk_light</code>), are minimal across all trees.</li>
+<li><strong>Other trunk problems</strong> (<code>trnk_other</code>) are extremely rare and show almost no significant impact.</li>
+</ul>
+<p>The graph highlights <strong>root problems caused by stones</strong> as the primary concern, underscoring the need for improved urban planning around tree beds. Branch and trunk problems are negligible, indicating effective maintenance or fewer external stressors.</p>
+</section>
+<section id="rooting-for-good-health-tree-conditions-in-nyc-neighborhoods" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="rooting-for-good-health-tree-conditions-in-nyc-neighborhoods"><span class="header-section-number">3.3</span> Rooting for Good Health: Tree Conditions in NYC Neighborhoods</h2>
+<p>The stacked diverging bar chart provides a visual summary of tree health distribution.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tree_data_filtered <span class="ot">&lt;-</span> tree_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(health), <span class="sc">!</span><span class="fu">is.na</span>(borough)) <span class="sc">%&gt;%</span>  </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(borough, health) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">health =</span> <span class="fu">factor</span>(health, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Poor"</span>, <span class="st">"Fair"</span>, <span class="st">"Good"</span>))  </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot data</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tree_data_filtered, <span class="fu">aes</span>(<span class="at">x =</span> count, <span class="at">y =</span> borough, <span class="at">fill =</span> health)) <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span>  </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Poor"</span> <span class="ot">=</span> <span class="st">"#F44336"</span>, <span class="st">"Fair"</span> <span class="ot">=</span> <span class="st">"#FFC107"</span>, <span class="st">"Good"</span> <span class="ot">=</span> <span class="st">"#4CAF50"</span>),</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Tree Health"</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Tree Health Distribution by Borough"</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Number of Trees"</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Borough"</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="results_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Overall Tree Health</strong></p>
+<ul>
+<li>The majority of trees in all boroughs are classified as being in <strong>Good health</strong> (green segment), indicating a generally healthy urban forest in NYC.</li>
+</ul>
+<p><strong>Borough Comparison</strong></p>
+<ul>
+<li><strong>Queens</strong> has the highest number of trees overall, with a significant portion in good health, but it also has a noticeable proportion of trees in <strong>Fair health</strong> (yellow segment).</li>
+<li><strong>Staten Island</strong> and <strong>Bronx</strong> have relatively fewer trees compared to Brooklyn and Queens, but a large proportion of their trees are in <strong>Good health</strong>.</li>
+</ul>
+<p><strong>Poor Health Distribution</strong></p>
+<ul>
+<li>Trees in <strong>Poor health</strong> (red segment) represent the smallest category across all boroughs.</li>
+<li><strong>Manhattan</strong> has the highest proportion of trees in poor health relative to its total number of trees, suggesting potential urban stress factors like pollution or limited green spaces.</li>
+</ul>
+<p><strong>Brooklyn and Staten Island</strong></p>
+<ul>
+<li>Brooklyn has the second-highest total number of trees, following Queens, and most are in good health.</li>
+<li>Staten Island, despite having the smallest tree count, shows a relatively balanced distribution among health categories compared to other boroughs.</li>
+</ul>
+<p><strong>Potential for Action</strong></p>
+<ul>
+<li>Boroughs like <strong>Manhattan</strong> and <strong>Queens</strong> may require targeted intervention to improve the health of trees classified as <strong>Fair</strong> or <strong>Poor</strong>, given their larger populations and stress factors.</li>
+</ul>
+</section>
+<section id="trunk-titans-small-vs.-mighty-trees" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="trunk-titans-small-vs.-mighty-trees"><span class="header-section-number">3.4</span> Trunk Titans: Small vs.&nbsp;Mighty Trees</h2>
+<p>The Cleveland dot plot shows the average tree diameter (DBH) for various tree species, highlighting differences in growth patterns and size among species in NYC.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate mean diameter by species</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>species_avg <span class="ot">&lt;-</span> tree_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(spc_common) <span class="sc">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_dbh =</span> <span class="fu">mean</span>(tree_dbh, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_dbh)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>) </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(species_avg, <span class="fu">aes</span>(<span class="at">x =</span> mean_dbh, <span class="at">y =</span> <span class="fu">reorder</span>(spc_common, mean_dbh))) <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Average Tree Diameter by Species"</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Average Diameter (DBH)"</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Tree Species"</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="results_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="1632"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Top Species with Largest Average Diameters</strong></p>
+<ul>
+<li>Species like <strong>London planetree</strong>, <strong>silver maple</strong>, and <strong>weeping willow</strong> stand out with the largest average tree diameters, exceeding 16 DBH (Diameter at Breast Height). These species are known for their fast growth and adaptability, often resulting in larger tree sizes.</li>
+</ul>
+<p><strong>Species with Smallest Average Diameters</strong></p>
+<ul>
+<li>At the lower end of the spectrum, species such as <strong>Ohio buckeye</strong>, <strong>ginkgo</strong>, and <strong>American linden</strong> exhibit smaller average diameters (around 8 DBH). These species may be slower-growing or less suitable for NYC’s urban conditions.</li>
+</ul>
+<p><strong>Insights for Urban Planning</strong></p>
+<ul>
+<li>Large-diameter species like the <strong>London planetree</strong> may require more space and resources but provide substantial canopy coverage. In contrast, smaller-diameter species may be suitable for tighter urban spaces.</li>
+</ul>
+<p><strong>Species-Specific Growth Patterns</strong></p>
+<ul>
+<li>The differences in average diameter could reflect species-specific growth characteristics, planting preferences, or environmental adaptability in NYC.</li>
+</ul>
+</section>
+<section id="paving-the-way-proportion-of-sidewalks-affected-by-trees" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="paving-the-way-proportion-of-sidewalks-affected-by-trees"><span class="header-section-number">3.5</span> Paving the Way: Proportion of Sidewalks Affected by Trees</h2>
+<p>The pie chart illustrates the proportion of trees in NYC with adjacent sidewalk damage.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate proportions</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sidewalk_proportion <span class="ot">&lt;-</span> tree_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sidewalk) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Enhanced pie chart</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sidewalk_proportion, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> prop, <span class="at">fill =</span> sidewalk)) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">width =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_polar</span>(<span class="at">theta =</span> <span class="st">"y"</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> scales<span class="sc">::</span><span class="fu">percent</span>(prop, <span class="at">accuracy =</span> <span class="fl">0.1</span>)),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">vjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"white"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">5</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Proportion of Trees with Sidewalk Damage"</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Sidewalk Condition"</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Damage"</span> <span class="ot">=</span> <span class="st">"#F44336"</span>, <span class="st">"NoDamage"</span> <span class="ot">=</span> <span class="st">"#4CAF50"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="results_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Majority with No Sidewalk Damage</strong>:</p>
+<ul>
+<li>A significant proportion (71.5%) of trees are adjacent to sidewalks that are in good condition, without visible damage.</li>
+</ul>
+<p><strong>Minority with Sidewalk Damage</strong>:</p>
+<ul>
+<li>Approximately 28.5% of trees are associated with sidewalks showing signs of damage.</li>
+</ul>
+<p><strong>Urban Impact Insight</strong>:</p>
+<ul>
+<li>This suggests that while the majority of sidewalks are resilient to tree-related damage, a substantial portion still suffers from issues, potentially due to tree roots disrupting pavement structures.</li>
+</ul>
+<p><strong>Actionable Consideration</strong>:</p>
+<ul>
+<li>Efforts could focus on mitigating damage through better tree placement or root management strategies to reduce future sidewalk damage while preserving urban greenery.</li>
+</ul>
+</section>
+<section id="pathways-to-tree-health-exploring-curb-placement-sidewalk-conditions-and-their-impact" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="pathways-to-tree-health-exploring-curb-placement-sidewalk-conditions-and-their-impact"><span class="header-section-number">3.6</span> Pathways to Tree Health: Exploring Curb Placement, Sidewalk Conditions, and Their Impact</h2>
+<p>The alluvial plot visualizes the relationship between curb location, sidewalk damage, and tree health.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggalluvial)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data for alluvial plot</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>alluvial_data <span class="ot">&lt;-</span> tree_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(curb_loc, sidewalk, health) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Alluvial plot with improved axis labels</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(alluvial_data, <span class="fu">aes</span>(<span class="at">axis1 =</span> curb_loc, <span class="at">axis2 =</span> sidewalk, <span class="at">axis3 =</span> health, <span class="at">y =</span> count)) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_alluvium</span>(<span class="fu">aes</span>(<span class="at">fill =</span> health)) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_stratum</span>() <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"stratum"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">after_stat</span>(stratum)), <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span> </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Flow of Trees from Curb Location to Sidewalk Damage to Health"</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Tree Characteristics"</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Trees"</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Good"</span> <span class="ot">=</span> <span class="st">"#4CAF50"</span>, <span class="st">"Fair"</span> <span class="ot">=</span> <span class="st">"#FFC107"</span>, <span class="st">"Poor"</span> <span class="ot">=</span> <span class="st">"#F44336"</span>)) <span class="sc">+</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">12</span>), </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>), </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">face =</span> <span class="st">"bold"</span>), </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="results_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="1440"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Curb Location</strong></p>
+<ul>
+<li>Most trees are located <strong>OnCurb</strong>, indicating that urban tree planting often aligns with curb locations.</li>
+<li>Trees <strong>OffsetFromCurb</strong> represent a smaller proportion, likely in areas with wider sidewalks or designated tree beds.</li>
+</ul>
+<p><strong>Sidewalk Damage</strong></p>
+<ul>
+<li>Trees <strong>OnCurb</strong> are more associated with <strong>Sidewalk Damage</strong>, likely due to root growth interfering with pavement structures.</li>
+<li>Trees <strong>OffsetFromCurb</strong> show a stronger association with <strong>NoDamage</strong>, suggesting reduced impact on sidewalks.</li>
+</ul>
+<p><strong>Tree Health</strong></p>
+<ul>
+<li>The majority of trees are categorized as <strong>Good</strong>, irrespective of their curb location or sidewalk condition.</li>
+<li>Trees in <strong>Poor</strong> health are more prevalent where <strong>Sidewalk Damage</strong> is present, indicating that environmental stressors may contribute to declining health.</li>
+</ul>
+<p><strong>Relationships</strong></p>
+<ul>
+<li>A clear flow is visible where trees <strong>OnCurb</strong> with <strong>Sidewalk Damage</strong> tend to have more <strong>Fair</strong> or <strong>Poor</strong> health.</li>
+<li>Trees <strong>OffsetFromCurb</strong> and with <strong>NoDamage</strong> predominantly exhibit <strong>Good</strong> health.</li>
+</ul>
+<p>The plot highlights the interplay between tree placement, sidewalk integrity, and tree health. Proper placement (e.g., OffsetFromCurb) could mitigate sidewalk damage and promote better tree health.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tree_data, <span class="fu">aes</span>(<span class="at">x =</span> sidewalk, <span class="at">y =</span> tree_dbh, <span class="at">fill =</span> sidewalk)) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Tree Diameter and Sidewalk Damage"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Sidewalk Condition"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Tree Diameter (DBH)"</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Damage"</span> <span class="ot">=</span> <span class="st">"#F44336"</span>, <span class="st">"NoDamage"</span> <span class="ot">=</span> <span class="st">"#4CAF50"</span>)) <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span>  <span class="co"># Adjust the y-axis limits to zoom in</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="results_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 </section>

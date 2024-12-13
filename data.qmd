@@ -37,8 +37,8 @@ library(dplyr)
 ```
 
 ```{r, message= FALSE, warning=FALSE}
-# Importing the data
-tree_data <- read_csv("../2015_Street_Tree_Census_-_Tree_Data_20241120.csv", n_max = 166134)
+# Importing the data, we are using partial data due to computational limits.
+tree_data <- read_csv("../2015_Street_Tree_Census_-_Tree_Data_20241120.csv", n_max = 266134)
 ```
 
 ## Missing value analysis
@@ -92,13 +92,13 @@ ggplot(na_counts_filtered, aes(x = reorder(Column, -Percentage), y = Percentage)
 
 **High Missing Value Columns**  
 
-- **`guards`**: With 88.3% missing values, this column has the highest rate of missingness. The data on tree guards might not have been consistently collected, possibly because it was optional or difficult to assess during the survey.
-- **`steward`**: At 76% missing values, this column reflects limited data availability on tree stewardship. This may be due to a lack of reporting or complexity in identifying individuals or groups responsible for tree care.
-- **`problems`**: This column has 67% missing values. It indicates incomplete data on issues affecting the trees, which could result from challenges in identifying or documenting tree-related problems.
+- **`guards`**: With 87.3% missing values, this column has the highest rate of missingness. The data on tree guards might not have been consistently collected, possibly because it was optional or difficult to assess during the survey.
+- **`steward`**: At 74.4% missing values, this column reflects limited data availability on tree stewardship. This may be due to a lack of reporting or complexity in identifying individuals or groups responsible for tree care.
+- **`problems`**: This column has 66.4% missing values. It indicates incomplete data on issues affecting the trees, which could result from challenges in identifying or documenting tree-related problems.
 
 **Moderate and Low Missing Value Columns**  
 
-- **`spc_common`, `spc_latin`, `health`, `sidewalk`**: These columns have around 4.60% missing values. These fields likely had better data collection protocols but still show gaps, potentially due to oversight or difficulty in identifying specific attributes (e.g., species or tree health conditions).
+- **`spc_common`, `spc_latin`, `health`, `sidewalk`**: These columns have around 50% missing values. These fields likely had better data collection protocols but still show gaps, potentially due to oversight or difficulty in identifying specific attributes (e.g., species or tree health conditions).
 - **`bbl`, `bin`, `census tract`, `council district`**: These columns exhibit very low missing values (less than 2%). These administrative or geographic fields were likely easier to document consistently, but small gaps might have occurred due to technical issues or incomplete records.
 
 **Columns with No Missing Values**  

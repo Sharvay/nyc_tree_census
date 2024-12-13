@@ -70,3 +70,279 @@ grid.arrange(
 The bar plot highlights that the **London planetree** is the most common species in NYC, with over 30,000 trees, thanks to its adaptability to urban conditions such as tolerance to pollution, drought, and varying soil pH. While it contributes to NYC’s fall aesthetics with its dense canopies and abundant leaf shedding, its foliage lacks the vibrant colors of species like **red maple** and **sweetgum**, which define the iconic autumn palette. Other species like **honeylocust**, **Callery pear**, and **pin oak** also play significant roles in NYC’s tree population. However, the heavy reliance on the London planetree raises concerns about monoculture vulnerabilities, as pests or diseases could disproportionately affect it. Insights from this analysis suggest that diversifying species further could enhance ecological resilience and reduce maintenance challenges, such as managing the significant cleanup required for London planetree debris.
 
 The second bar plot shows that NYC’s **least common species**, such as **red pine**, **red horse chestnut**, and **Douglas-fir**, have fewer than 30 trees. Their rarity reflects challenges in urban adaptation, including specific environmental needs and sensitivity to pollution. Trees like **Osage-orange** and **Himalayan cedar** highlight underutilized biodiversity, offering potential for conservation efforts. Rare species may require tailored strategies for survival in urban environments, such as improved soil preparation, reduced competition, or protection from pests. Incorporating a wider variety of species, including these rarer types, could reduce risks associated with monoculture and promote a more balanced and resilient urban forest.
+
+## Surviving the City: Daily Struggles of NYC Trees
+
+We will see the prevalence of various tree problems in NYC, categorized into trunk, branch, and root issues using the faceted bar chart.
+```{r, fig.width=15, fig.height=10}
+problem_columns <- c("trunk_wire", "trnk_light", "trnk_other", 
+                     "brch_light", "brch_shoe", "brch_other",
+                     "root_stone", "root_grate", "root_other")
+
+# Prepare data
+problem_data <- tree_data %>%
+  select(all_of(problem_columns)) %>%
+  pivot_longer(cols = everything(), names_to = "problem_type", values_to = "presence") %>%
+  filter(!is.na(presence)) %>%
+  group_by(problem_type, presence) %>%
+  summarise(count = n(), .groups = "drop")
+
+# Create the faceted bar chart
+ggplot(problem_data, aes(x = presence, y = count, fill = presence)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c("Yes" = "#FF6347", "No" = "#4682B4")) +
+  facet_wrap(~ problem_type, scales = "free_y") +
+  labs(
+    title = "Presence of Tree Problems by Type",
+    x = "Problem Presence (Yes/No)",
+    y = "Number of Trees"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(face = "bold", size = 14)
+  )
+
+
+```
+
+**Branch Problems**
+
+- **Branch problems caused by lights** (`brch_light`) have the highest occurrence among branch-related issues but remain rare compared to "No" responses.
+- Problems like **branch problems caused by shoes** (`brch_shoe`) and **other branch problems** (`brch_other`) are negligible.
+
+**Root Problems**
+
+- **Root problems caused by stones** (`root_stone`) are the most significant among all categories, with a notable number of "Yes" responses. This highlights the impact of paved areas on root health.
+- **Root problems caused by grates** (`root_grate`) and **other root problems** (`root_other`) are nearly nonexistent.
+
+**Trunk Problems**
+
+- Trunk-related issues, including **problems caused by wires** (`trunk_wire`) and **lights** (`trnk_light`), are minimal across all trees.
+- **Other trunk problems** (`trnk_other`) are extremely rare and show almost no significant impact.
+
+The graph highlights **root problems caused by stones** as the primary concern, underscoring the need for improved urban planning around tree beds. Branch and trunk problems are negligible, indicating effective maintenance or fewer external stressors.
+
+
+## Rooting for Good Health: Tree Conditions in NYC Neighborhoods
+The stacked diverging bar chart provides a visual summary of tree health distribution.
+```{r}
+# Prepare data
+tree_data_filtered <- tree_data %>%
+  filter(!is.na(health), !is.na(borough)) %>%  
+  group_by(borough, health) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  mutate(
+    health = factor(health, levels = c("Poor", "Fair", "Good"))  
+  )
+
+# Plot data
+ggplot(tree_data_filtered, aes(x = count, y = borough, fill = health)) +
+  geom_bar(stat = "identity", position = "stack") +  
+  scale_fill_manual(
+    values = c("Poor" = "#F44336", "Fair" = "#FFC107", "Good" = "#4CAF50"),
+    name = "Tree Health"
+  ) +
+  labs(
+    title = "Tree Health Distribution by Borough",
+    x = "Number of Trees",
+    y = "Borough"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    legend.title = element_text(face = "bold", size = 12))
+
+```
+
+**Overall Tree Health**
+
+- The majority of trees in all boroughs are classified as being in **Good health** (green segment), indicating a generally healthy urban forest in NYC.
+
+**Borough Comparison**
+
+- **Queens** has the highest number of trees overall, with a significant portion in good health, but it also has a noticeable proportion of trees in **Fair health** (yellow segment).
+- **Staten Island** and **Bronx** have relatively fewer trees compared to Brooklyn and Queens, but a large proportion of their trees are in **Good health**.
+
+**Poor Health Distribution**
+
+   - Trees in **Poor health** (red segment) represent the smallest category across all boroughs.
+   - **Manhattan** has the highest proportion of trees in poor health relative to its total number of trees, suggesting potential urban stress factors like pollution or limited green spaces.
+
+**Brooklyn and Staten Island**
+
+   - Brooklyn has the second-highest total number of trees, following Queens, and most are in good health.
+   - Staten Island, despite having the smallest tree count, shows a relatively balanced distribution among health categories compared to other boroughs.
+
+**Potential for Action**
+
+   - Boroughs like **Manhattan** and **Queens** may require targeted intervention to improve the health of trees classified as **Fair** or **Poor**, given their larger populations and stress factors.
+   
+## Trunk Titans: Small vs. Mighty Trees
+The Cleveland dot plot shows the average tree diameter (DBH) for various tree species, highlighting differences in growth patterns and size among species in NYC.
+```{r, fig.width=17, fig.height=12}
+library(dplyr)
+library(ggplot2)
+
+# Aggregate mean diameter by species
+species_avg <- tree_data %>%
+  group_by(spc_common) %>%
+  summarise(mean_dbh = mean(tree_dbh, na.rm = TRUE)) %>%
+  arrange(desc(mean_dbh)) %>%
+  slice(1:50) 
+
+# Create the plot
+ggplot(species_avg, aes(x = mean_dbh, y = reorder(spc_common, mean_dbh))) +
+  geom_point(color = "blue", size = 3) +
+  labs(
+    title = "Average Tree Diameter by Species",
+    x = "Average Diameter (DBH)",
+    y = "Tree Species"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.text.y = element_text(size = 12),
+    axis.text.x = element_text(size = 12),
+    axis.title.x = element_text(face = "bold", size = 12),
+    axis.title.y = element_text(face = "bold", size = 12)
+  )
+
+
+```
+
+**Top Species with Largest Average Diameters**
+
+   - Species like **London planetree**, **silver maple**, and **weeping willow** stand out with the largest average tree diameters, exceeding 16 DBH (Diameter at Breast Height). These species are known for their fast growth and adaptability, often resulting in larger tree sizes.
+
+**Species with Smallest Average Diameters**
+
+   - At the lower end of the spectrum, species such as **Ohio buckeye**, **ginkgo**, and **American linden** exhibit smaller average diameters (around 8 DBH). These species may be slower-growing or less suitable for NYC's urban conditions.
+
+**Insights for Urban Planning**
+
+   - Large-diameter species like the **London planetree** may require more space and resources but provide substantial canopy coverage. In contrast, smaller-diameter species may be suitable for tighter urban spaces.
+
+**Species-Specific Growth Patterns**
+
+   - The differences in average diameter could reflect species-specific growth characteristics, planting preferences, or environmental adaptability in NYC.
+   
+## Paving the Way: Proportion of Sidewalks Affected by Trees
+The pie chart illustrates the proportion of trees in NYC with adjacent sidewalk damage.
+```{r}
+# Calculate proportions
+sidewalk_proportion <- tree_data %>%
+  count(sidewalk) %>%
+  mutate(prop = n / sum(n))
+
+# Enhanced pie chart
+ggplot(sidewalk_proportion, aes(x = "", y = prop, fill = sidewalk)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  geom_text(
+    aes(label = scales::percent(prop, accuracy = 0.1)),
+    position = position_stack(vjust = 0.5),
+    color = "white",
+    size = 5
+  ) +
+  labs(
+    title = "Proportion of Trees with Sidewalk Damage",
+    fill = "Sidewalk Condition"
+  ) +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    legend.position = "right",
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10)
+  ) +
+  scale_fill_manual(values = c("Damage" = "#F44336", "NoDamage" = "#4CAF50"))
+
+```
+
+**Majority with No Sidewalk Damage**:
+
+   - A significant proportion (71.5%) of trees are adjacent to sidewalks that are in good condition, without visible damage.
+
+**Minority with Sidewalk Damage**:
+
+   - Approximately 28.5% of trees are associated with sidewalks showing signs of damage.
+
+**Urban Impact Insight**:
+
+   - This suggests that while the majority of sidewalks are resilient to tree-related damage, a substantial portion still suffers from issues, potentially due to tree roots disrupting pavement structures.
+
+**Actionable Consideration**:
+
+   - Efforts could focus on mitigating damage through better tree placement or root management strategies to reduce future sidewalk damage while preserving urban greenery.
+
+## Pathways to Tree Health: Exploring Curb Placement, Sidewalk Conditions, and Their Impact
+The alluvial plot visualizes the relationship between curb location, sidewalk damage, and tree health.
+```{r, fig.width=15, fig.height=8}
+library(ggalluvial)
+# Prepare data for alluvial plot
+alluvial_data <- tree_data %>%
+  group_by(curb_loc, sidewalk, health) %>%
+  summarise(count = n(), .groups = "drop")
+
+# Alluvial plot with improved axis labels
+ggplot(alluvial_data, aes(axis1 = curb_loc, axis2 = sidewalk, axis3 = health, y = count)) +
+  geom_alluvium(aes(fill = health)) +
+  geom_stratum() +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 4) + 
+  labs(
+    title = "Flow of Trees from Curb Location to Sidewalk Damage to Health",
+    x = "Tree Characteristics",
+    y = "Number of Trees"
+  ) +
+  scale_fill_manual(values = c("Good" = "#4CAF50", "Fair" = "#FFC107", "Poor" = "#F44336")) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(hjust = 1, size = 12), 
+    axis.text.y = element_text(size = 12), 
+    axis.title = element_text(size = 12, face = "bold"), 
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
+
+```
+**Curb Location**
+
+   - Most trees are located **OnCurb**, indicating that urban tree planting often aligns with curb locations.
+   - Trees **OffsetFromCurb** represent a smaller proportion, likely in areas with wider sidewalks or designated tree beds.
+
+**Sidewalk Damage**
+
+   - Trees **OnCurb** are more associated with **Sidewalk Damage**, likely due to root growth interfering with pavement structures.
+   - Trees **OffsetFromCurb** show a stronger association with **NoDamage**, suggesting reduced impact on sidewalks.
+
+**Tree Health**
+
+   - The majority of trees are categorized as **Good**, irrespective of their curb location or sidewalk condition.
+   - Trees in **Poor** health are more prevalent where **Sidewalk Damage** is present, indicating that environmental stressors may contribute to declining health.
+
+**Relationships**
+
+   - A clear flow is visible where trees **OnCurb** with **Sidewalk Damage** tend to have more **Fair** or **Poor** health. 
+   - Trees **OffsetFromCurb** and with **NoDamage** predominantly exhibit **Good** health.
+
+The plot highlights the interplay between tree placement, sidewalk integrity, and tree health. Proper placement (e.g., OffsetFromCurb) could mitigate sidewalk damage and promote better tree health.
+
+```{r}
+library(ggplot2)
+
+ggplot(tree_data, aes(x = sidewalk, y = tree_dbh, fill = sidewalk)) +
+  geom_violin() +
+  labs(
+    title = "Tree Diameter and Sidewalk Damage",
+    x = "Sidewalk Condition",
+    y = "Tree Diameter (DBH)"
+  ) +
+  scale_fill_manual(values = c("Damage" = "#F44336", "NoDamage" = "#4CAF50")) +
+  coord_cartesian(ylim = c(0, 100)) +  # Adjust the y-axis limits to zoom in
+  theme_minimal()
+
+```
+
