@@ -555,3 +555,87 @@ The bar chart illustrates the **Shannon Diversity Index** for tree species acros
 ### Interpretation:
 
 This analysis suggests that **urban planning, tree planting policies, and available green space** play significant roles in influencing tree diversity across boroughs. While the differences are not drastic, the diversity index highlights the relative ecological richness of Queens, Bronx, and Brooklyn compared to the more urbanized Manhattan. These findings could guide future biodiversity-enhancing efforts in areas with lower diversity.
+
+```{r}
+library(leaflet)
+library(dplyr)
+library(sf)
+library(tigris)
+
+nyc_boroughs <- tigris::counties(state = "NY", cb = TRUE) %>%
+  filter(NAME %in% c("New York", "Kings", "Queens", "Bronx", "Richmond"))
+
+# sampled_tree_data <- tree_data %>% sample_n(5000)
+
+leaflet(tree_data) %>%
+
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addPolygons(data = nyc_boroughs, 
+              color = "#2c3e50", 
+              weight = 2, 
+              fillColor = "#ecf0f1", 
+              fillOpacity = 0.3, 
+              label = ~NAME) %>%
+  
+  # Add Circle Markers for Tree Data
+  addCircleMarkers(lng = ~longitude, 
+                   lat = ~latitude, 
+                   radius = ~ifelse(tree_dbh > 20, 6, 3), # Tree size based on diameter
+                   color = ~case_when(
+                     health == "Good" ~ "#27ae60",   # Green for "Good"
+                     health == "Fair" ~ "#f1c40f",   # Yellow for "Fair"
+                     health == "Poor" ~ "#e74c3c",   # Red for "Poor"
+                     TRUE ~ "#bdc3c7"                # Gray if health is missing
+                   ),
+                   stroke = TRUE, 
+                   weight = 0.7, 
+                   fillOpacity = 0.8,
+                   popup = ~paste0(
+                     "<strong>Species: </strong>", spc_common, 
+                     "<br><strong>Health: </strong>", health, 
+                     "<br><strong>Status: </strong>", status, 
+                     "<br><strong>Diameter (DBH): </strong>", tree_dbh, 
+                     "<br><strong>Borough: </strong>", borough
+                   )) %>%
+  
+  # Cluster the markers to avoid overcrowding
+  addMarkers(lng = ~longitude, 
+             lat = ~latitude, 
+             clusterOptions = markerClusterOptions()) %>%
+  
+  # Borough Legend
+  addLegend(position = "topright", 
+            colors = c("#2c3e50"), 
+            labels = c("Borough Boundaries"), 
+            title = "Map Key", 
+            opacity = 0.8) %>%
+  
+  # Health Legend
+  addLegend(position = "bottomright", 
+            colors = c("#27ae60", "#f1c40f", "#e74c3c"), 
+            labels = c("Good Health", "Fair Health", "Poor Health"), 
+            title = "Tree Health", 
+            opacity = 0.8)
+```
+
+### Observation:
+
+The map visualization provides a detailed and intuitive representation of tree health across New York City boroughs, allowing us to draw several key observations:
+
+1. **Health Distribution:**
+   - A large majority of the trees sampled are in **good health**, as indicated by the prevalence of green markers across the map.
+   - A smaller proportion of trees are classified as **fair health** (yellow markers), while **poor health** trees (red markers) are relatively sparse but concentrated in specific areas.
+
+2. **Geographical Patterns:**
+   - **Manhattan and Brooklyn:** These boroughs have a significant density of trees, as evidenced by the clustering of markers, especially in parks and green corridors. Poor health trees appear more scattered but can be seen in some heavily urbanized regions.
+   - **Queens:** Queens shows widespread distribution of trees, with clusters of healthy trees around residential and park areas. A few problem zones with poor health trees can be observed but are less pronounced.
+   - **Bronx and Staten Island:** While the Bronx has several clusters of trees in good health, Staten Island exhibits fewer clusters overall, likely reflecting its lower urban density. Staten Island still maintains a good balance of tree health.
+
+3. **Tree Diameter Clusters:**
+   - Larger trees (radius indicating tree diameter) are more common in park areas and green belts, as expected. This is consistent with the ecological protection and space availability in such regions.
+
+4. **Tree Health Clustering:**
+   - The clustering feature reveals specific areas where tree health issues (red markers) might require attention. These could be areas affected by urban stressors like pollution, soil compaction, or limited care.
+
+5. **Borough-Level Efforts:**
+   - The map highlights the borough-level differences in tree density and health distribution. For instance, Queens and Brooklyn have both high density and predominantly healthy trees, likely due to better urban forestry practices or ecological planning.
