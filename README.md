@@ -1,3 +1,5 @@
 # NYC Tree Census
 
 Trees play a crucial role in urban environments, providing ecological, aesthetic, and social benefits. Our project focuses on analyzing the 2015 Street Tree Census dataset, which contains detailed information about over 666,000 street trees in New York City. By examining attributes such as tree species, health status, and geographic distribution, we aim to uncover insights into the city’s urban forestry. The analysis will help understand tree health, species diversity, and environmental factors to support sustainable urban planning and environmental conservation efforts.
+
+View Project: https://sharvay.github.io/nyc_tree_census/
